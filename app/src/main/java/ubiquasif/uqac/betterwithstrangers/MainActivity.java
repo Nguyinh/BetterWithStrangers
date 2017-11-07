@@ -5,7 +5,10 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.TextView;
+
+import ubiquasif.uqac.betterwithstrangers.Helpers.Helper_NavigationBottomBar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,11 +37,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);      // retire la title bar mais ne marche pas encore
+
         setContentView(R.layout.activity_main);
 
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        Helper_NavigationBottomBar navBarCorrected = new Helper_NavigationBottomBar();
+        navBarCorrected.disableShiftMode(navigation);
     }
 
 }
