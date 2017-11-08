@@ -11,9 +11,11 @@ import android.widget.TextView;
 
 import ubiquasif.uqac.betterwithstrangers.Helpers.Helper_NavigationBottomBar;
 
-public class ActivityHost extends AppCompatActivity {
+public class GuestActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
+
+    private BottomNavigationView navigationView;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -21,8 +23,8 @@ public class ActivityHost extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_host:
-                    mTextMessage.setText(R.string.title_host);
+                case R.id.navigation_search:
+                    mTextMessage.setText(R.string.title_search);
                     return true;
                 case R.id.navigation_dashboard:
                     mTextMessage.setText(R.string.title_dashboard);
@@ -31,7 +33,7 @@ public class ActivityHost extends AppCompatActivity {
                     mTextMessage.setText(R.string.title_notifications);
                     return true;
                 case R.id.navigation_switch:
-                    Intent intent = new Intent(ActivityHost.this, MainActivity.class);
+                    Intent intent = new Intent(GuestActivity.this, HostActivity.class);
                     startActivity(intent);
                     return true;
                 case R.id.navigation_profil:
@@ -46,13 +48,17 @@ public class ActivityHost extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Remove title bar (not mandatory)
+        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         // Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.activity_host);
+        // Set content view AFTER ABOVE sequence (to avoid crash)
+        this.setContentView(R.layout.activity_main);
 
         mTextMessage = (TextView) findViewById(R.id.message);
-        
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 

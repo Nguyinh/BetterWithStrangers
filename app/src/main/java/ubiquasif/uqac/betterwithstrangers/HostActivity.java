@@ -4,23 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
 import ubiquasif.uqac.betterwithstrangers.Helpers.Helper_NavigationBottomBar;
 
-public class MainActivity extends AppCompatActivity {
+public class HostActivity extends AppCompatActivity {
 
     private TextView mTextMessage;
-
-    private BottomNavigationView navigationView;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -28,8 +21,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_search:
-                    mTextMessage.setText(R.string.title_search);
+                case R.id.navigation_host:
+                    mTextMessage.setText(R.string.title_host);
                     return true;
                 case R.id.navigation_dashboard:
                     mTextMessage.setText(R.string.title_dashboard);
@@ -38,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
                     mTextMessage.setText(R.string.title_notifications);
                     return true;
                 case R.id.navigation_switch:
-                    Intent intent = new Intent(MainActivity.this, ActivityHost.class);
+                    Intent intent = new Intent(HostActivity.this, GuestActivity.class);
                     startActivity(intent);
                     return true;
                 case R.id.navigation_profil:
@@ -53,17 +46,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Remove title bar (not mandatory)
-        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
         // Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        // Set content view AFTER ABOVE sequence (to avoid crash)
-        this.setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_host);
 
         mTextMessage = (TextView) findViewById(R.id.message);
-
+        
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
