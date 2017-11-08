@@ -68,8 +68,7 @@ public class MainActivity extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         // Fix navigation bar strange behavior
-        Helper_NavigationBottomBar navBarCorrected = new Helper_NavigationBottomBar();
-        navBarCorrected.disableShiftMode(navigation);
+        Helper_NavigationBottomBar.disableShiftMode(navigation);
     }
 
 }
