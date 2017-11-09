@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import ubiquasif.uqac.betterwithstrangers.Helpers.Helper_NavigationBottomBar;
@@ -48,18 +47,11 @@ public class GuestActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Remove title bar (not mandatory)
-        //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_guest);
 
-        // Remove notification bar
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        mTextMessage = findViewById(R.id.message);
 
-        // Set content view AFTER ABOVE sequence (to avoid crash)
-        this.setContentView(R.layout.activity_main);
-
-        mTextMessage = (TextView) findViewById(R.id.message);
-
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         // Fix navigation bar strange behavior
