@@ -1,11 +1,22 @@
 <resources>
     <string name="app_name">BetterWithStrangers</string>
+
+    <string name="facebook_application_id" translatable="false">402771703476194</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb402771703476194</string>
+
+    <string name="sign_in_button">Se connecter</string>
+    <string name="sign_out_button">Se déconnecter</string>
+    <string name="proceed_button">Continuer</string>
+    <string name="sign_in_cancelled">Connexion annulée</string>
+    <string name="sign_in_error">Erreur durant la connexion</string>
+    <string name="no_connection">Aucun accès Internet</string>
+    <string name="connected_as">Connecté en tant que %1$s (%2$s)</string>
+
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="title_switch">Switch</string>
     <string name="title_profil">Profil</string>
-    <string name="title_activity_host">ActivityHost</string>
     <string name="title_search">Rechercher</string>
     <string name="title_host">Proposer</string>
 </resources>
