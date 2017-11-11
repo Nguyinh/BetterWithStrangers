@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import ubiquasif.uqac.betterwithstrangers.Fragments.NotificationFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.ProfileFragment;
@@ -17,10 +16,6 @@ import ubiquasif.uqac.betterwithstrangers.Helpers.Helper_NavigationBottomBar;
 
 public class GuestActivity extends AppCompatActivity
         implements ProfileFragment.OnFragmentInteractionListener, NotificationFragment.OnFragmentInteractionListener {
-
-    private TextView mTextMessage;
-
-    private BottomNavigationView navigationView;
 
     private Fragment profilFragment;
     private Fragment notificationFragment;
@@ -56,7 +51,6 @@ public class GuestActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_guest);
 
-        mTextMessage = findViewById(R.id.message);
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
