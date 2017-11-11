@@ -1,25 +1,31 @@
 package ubiquasif.uqac.betterwithstrangers.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
+
+import ubiquasif.uqac.betterwithstrangers.FirstConnectionActivity;
 import ubiquasif.uqac.betterwithstrangers.R;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ProfilFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ProfilFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ProfilFragment extends Fragment{
+public class ProfilFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -32,17 +38,8 @@ public class ProfilFragment extends Fragment{
     private OnFragmentInteractionListener mListener;
 
     public ProfilFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfilFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static ProfilFragment newInstance(String param1, String param2) {
         ProfilFragment fragment = new ProfilFragment();
@@ -69,6 +66,28 @@ public class ProfilFragment extends Fragment{
         return inflater.inflate(R.layout.fragment_profil, container, false);
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Button signOutButton = view.findViewById(R.id.sign_out_button);
+        signOutButton.setOnClickListener(this);
+
+        TextView nameView = view.findViewById(R.id.display_name);
+        ImageView photoView = view.findViewById(R.id.profile_photo);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            String name = user.getDisplayName();
+            if (name != null && name.length() > 0)
+                nameView.setText(name);
+
+            Uri photoUrl = user.getPhotoUrl();
+            if (photoUrl != null)
+                Picasso.with(getContext()).load(photoUrl).into(photoView);
+        }
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -93,16 +112,22 @@ public class ProfilFragment extends Fragment{
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.sign_out_button) {
+            AuthUI.getInstance()
+                    .signOut(getActivity())
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Intent intent = new Intent(getActivity(), FirstConnectionActivity.class);
+                            startActivity(intent);
+                            getActivity().finish();
+                        }
+                    });
+        }
+    }
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
