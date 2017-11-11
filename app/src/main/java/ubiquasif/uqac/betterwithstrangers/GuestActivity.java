@@ -12,11 +12,11 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import ubiquasif.uqac.betterwithstrangers.Fragments.NotificationFragment;
-import ubiquasif.uqac.betterwithstrangers.Fragments.ProfilFragment;
+import ubiquasif.uqac.betterwithstrangers.Fragments.ProfileFragment;
 import ubiquasif.uqac.betterwithstrangers.Helpers.Helper_NavigationBottomBar;
 
 public class GuestActivity extends AppCompatActivity
-        implements ProfilFragment.OnFragmentInteractionListener, NotificationFragment.OnFragmentInteractionListener {
+        implements ProfileFragment.OnFragmentInteractionListener, NotificationFragment.OnFragmentInteractionListener {
 
     private TextView mTextMessage;
 
@@ -63,7 +63,7 @@ public class GuestActivity extends AppCompatActivity
         // Fix navigation bar strange behavior
         Helper_NavigationBottomBar.disableShiftMode(navigation);
 
-        profilFragment = ProfilFragment.newInstance(null, null);
+        profilFragment = ProfileFragment.newInstance(null, null);
 
         notificationFragment = NotificationFragment.newInstance(null, null);
     }
