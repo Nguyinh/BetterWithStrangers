@@ -1,10 +1,13 @@
 package ubiquasif.uqac.betterwithstrangers;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -14,11 +17,21 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.Iterator;
+
+import ubiquasif.uqac.betterwithstrangers.Fragments.NotificationFragment;
+import ubiquasif.uqac.betterwithstrangers.Fragments.ProfilFragment;
 import ubiquasif.uqac.betterwithstrangers.Helpers.Helper_NavigationBottomBar;
 
-public class GuestActivity extends AppCompatActivity {
+public class GuestActivity extends AppCompatActivity
+    implements ProfilFragment.OnFragmentInteractionListener, NotificationFragment.OnFragmentInteractionListener{
 
     private TextView mTextMessage;
+
+    private BottomNavigationView navigationView;
+
+    private Fragment profilFragment;
+    private Fragment notificationFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -39,6 +52,8 @@ public class GuestActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_notifications:
                     mTextMessage.setText(R.string.title_notifications);
+
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_container, notificationFragment).commit();
                     return true;
                 case R.id.navigation_switch:
                     Intent intent = new Intent(GuestActivity.this, HostActivity.class);
@@ -47,6 +62,10 @@ public class GuestActivity extends AppCompatActivity {
                 case R.id.navigation_profil:
                     mTextMessage.setVisibility(View.GONE);
                     signOutButton.setVisibility(View.VISIBLE);
+                    mTextMessage.setText(R.string.title_profil);
+
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_container, profilFragment).commit();
+
                     return true;
             }
             return false;
@@ -61,11 +80,20 @@ public class GuestActivity extends AppCompatActivity {
 
         mTextMessage = findViewById(R.id.message);
 
-        BottomNavigationView navigation = findViewById(R.id.navigation);
+        // Set content view AFTER ABOVE sequence (to avoid crash)
+        this.setContentView(R.layout.activity_guest);
+
+        mTextMessage = (TextView) findViewById(R.id.message);
+
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         // Fix navigation bar strange behavior
         Helper_NavigationBottomBar.disableShiftMode(navigation);
+
+        profilFragment = ProfilFragment.newInstance(null,null);
+
+        notificationFragment = NotificationFragment.newInstance(null,null);
     }
 
     public void onSignOutClick(View v) {
@@ -79,5 +107,11 @@ public class GuestActivity extends AppCompatActivity {
                         finish();
                     }
                 });
+    }
+
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        Log.println(Log.DEBUG,"debug", "Fragment interaction detected");
     }
 }
