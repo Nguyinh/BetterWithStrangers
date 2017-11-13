@@ -1,5 +1,7 @@
 package ubiquasif.uqac.betterwithstrangers;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,17 +12,65 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
+
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import ubiquasif.uqac.betterwithstrangers.Fragments.CreateEventFragment;
 import ubiquasif.uqac.betterwithstrangers.Helpers.Helper_NavigationBottomBar;
 
 public class HostActivity extends AppCompatActivity
-        implements CreateEventFragment.OnFragmentInteractionListener{
+        implements CreateEventFragment.OnFragmentInteractionListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
 
     private TextView mTextMessage;
 
     private Fragment createEventFragment;
+
+    /**
+     * To set date on TextView
+     * @param calendar
+     */
+    private void setDate(final Calendar calendar) {
+        ((CreateEventFragment)createEventFragment).setDateTest(calendar);
+    }
+
+    /**
+     * To set time on TextView
+     * @param time
+     */
+    private void setTime(final String time) {
+        ((CreateEventFragment)createEventFragment).setTimeTest(time);
+
+    }
+
+
+    /**
+     * To receive a callback when the user sets the date.
+     * @param view
+     * @param year
+     * @param month
+     * @param day
+     */
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+        Calendar cal = new GregorianCalendar(year, month, day);
+        setDate(cal);
+    }
+
+    /**
+     * To receive a callback when the user sets the time.
+     * @param view
+     * @param hourOfDay
+     * @param minute
+     */
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        String time = "Heure choisie : "+ String.valueOf(hourOfDay) + "h" + String.valueOf(minute) + "\n";
+        setTime(time);
+    }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -69,7 +119,7 @@ public class HostActivity extends AppCompatActivity
         // Fix navigation bar strange behavior
         Helper_NavigationBottomBar.disableShiftMode(navigation);
 
-        createEventFragment = CreateEventFragment.newInstance(null,null);
+        createEventFragment = CreateEventFragment.newInstance();
 
     }
 
