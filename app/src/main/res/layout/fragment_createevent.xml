@@ -1,0 +1,74 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ubiquasif.uqac.betterwithstrangers.Fragments.CreateEventFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            //Public/Privée
+            <Switch
+            android:id="@+id/switch1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Public / Privée" />
+
+            //Tags descriptif d'evenements
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Tags, Mots clefs" />
+
+            //date de l'evenement
+            <Button
+                android:id="@+id/picDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choisir Date"
+                android:onClick="datePicker"/>
+
+            <TextView
+                android:id="@+id/show_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Date choisie"
+                android:textSize="18dp"
+                android:layout_toLeftOf="@+id/picDate"/>
+
+
+            //heure de l'evenement
+            <Button
+                android:id="@+id/picTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Choisir l'heure"
+                android:onClick="timePicker"/>
+
+            <TextView
+                android:id="@+id/show_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Heure choisie"
+                android:textSize="18dp"
+                android:layout_toLeftOf="@+id/picTime"/>
+
+            //Lieu
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+</FrameLayout>
