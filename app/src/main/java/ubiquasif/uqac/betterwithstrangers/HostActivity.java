@@ -3,32 +3,39 @@ package ubiquasif.uqac.betterwithstrangers;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.DatePicker;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
-import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import ubiquasif.uqac.betterwithstrangers.Fragments.CreateEventFragment;
+import ubiquasif.uqac.betterwithstrangers.Fragments.NotificationFragment;
+import ubiquasif.uqac.betterwithstrangers.Fragments.ProfileFragment;
 import ubiquasif.uqac.betterwithstrangers.Helpers.Helper_NavigationBottomBar;
 
 public class HostActivity extends AppCompatActivity
-        implements CreateEventFragment.OnFragmentInteractionListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
+        implements CreateEventFragment.OnFragmentInteractionListener,
+        ProfileFragment.OnFragmentInteractionListener,
+        NotificationFragment.OnFragmentInteractionListener,
+        DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
 
-    private TextView mTextMessage;
+
+    private Toolbar toolbar;
 
     private Fragment createEventFragment;
+    private Fragment profilFragment;
+    private Fragment notificationFragment;
 
     /**
      * To set date on TextView
@@ -79,23 +86,23 @@ public class HostActivity extends AppCompatActivity
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_host:
-                    mTextMessage.setText(R.string.title_host);
-                    mTextMessage.setVisibility(View.GONE);
+                    toolbar.setTitle("Créer un événement");
                     getSupportFragmentManager().beginTransaction().replace(R.id.main_container, createEventFragment).commit();
-
                     return true;
                 case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
+                    toolbar.setTitle("Dashboard");
                     return true;
                 case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
+                    toolbar.setTitle("Notifications");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_container, notificationFragment).commit();
                     return true;
                 case R.id.navigation_switch:
                     Intent intent = new Intent(HostActivity.this, GuestActivity.class);
                     startActivity(intent);
                     return true;
                 case R.id.navigation_profil:
-                    mTextMessage.setText(R.string.title_profil);
+                    toolbar.setTitle("Profil");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_container, profilFragment).commit();
                     return true;
             }
             return false;
@@ -108,10 +115,15 @@ public class HostActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_host);
 
-        mTextMessage = findViewById(R.id.message);
-
         // Set content view AFTER ABOVE sequence (to avoid crash)
         this.setContentView(R.layout.activity_host);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Créer un événement");
+        toolbar.setTitleTextColor(Color.WHITE);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowCustomEnabled(false);
+        setToolbar(toolbar);
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -119,8 +131,18 @@ public class HostActivity extends AppCompatActivity
         // Fix navigation bar strange behavior
         Helper_NavigationBottomBar.disableShiftMode(navigation);
 
+        profilFragment = ProfileFragment.newInstance(null, null);
+        notificationFragment = NotificationFragment.newInstance(null, null);
         createEventFragment = CreateEventFragment.newInstance();
+        //affichage de la création de soirée directement après le switch
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_container, createEventFragment).commit();
 
+
+    }
+
+    public void setToolbar(Toolbar toolbar) {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
