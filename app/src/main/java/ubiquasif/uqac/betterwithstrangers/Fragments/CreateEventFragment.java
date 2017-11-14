@@ -25,6 +25,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.hootsuite.nachos.NachoTextView;
+import com.hootsuite.nachos.terminator.ChipTerminatorHandler;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -42,6 +44,7 @@ public class CreateEventFragment extends Fragment {
     private EditText placeEdit;
     private Switch privateSwitch;
     private FloatingActionButton fab;
+    private NachoTextView tags;
 
     private OnFragmentInteractionListener mListener;
 
@@ -119,6 +122,9 @@ public class CreateEventFragment extends Fragment {
         privateSwitch = view.findViewById(R.id.private_switch);
         placeEdit = view.findViewById(R.id.placeEvent);
 
+        tags = view.findViewById(R.id.tags);
+        tags.addChipTerminator(' ', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_TO_TERMINATOR);
+
         fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,7 +196,7 @@ public class CreateEventFragment extends Fragment {
                 FirebaseAuth.getInstance().getUid(),
                 nameEdit.getText().toString(),
                 privateSwitch.isChecked(),
-                null,
+                tags.getChipValues(),
                 mCalendar.getTime(),
                 placeEdit.getText().toString()
         );

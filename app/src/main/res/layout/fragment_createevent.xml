@@ -12,9 +12,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp">
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp">
 
             <!--Nom de la soirée-->
             <EditText
@@ -51,14 +51,14 @@
             </LinearLayout>
 
             <!--Tags descriptifs d'événements-->
-            <EditText
+            <com.hootsuite.nachos.NachoTextView
                 android:id="@+id/tags"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/public_layout"
                 android:layout_marginBottom="10dp"
-                android:ems="10"
-                android:hint="Mots-clés" />
+                android:hint="Mots-clés"
+                app:chipBackground="@android:color/darker_gray" />
 
             <!--Date de l'événement-->
             <LinearLayout
@@ -74,8 +74,8 @@
                     android:id="@+id/show_date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/picked_date"
                     android:layout_weight="1"
+                    android:text="@string/picked_date"
                     android:textSize="18sp" />
 
                 <Button
@@ -101,8 +101,8 @@
                     android:id="@+id/show_time"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/picked_time"
                     android:layout_weight="1"
+                    android:text="@string/picked_time"
                     android:textSize="18sp" />
 
                 <Button
@@ -133,8 +133,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
         android:src="@drawable/com_facebook_button_like_icon_selected"
         app:backgroundTint="@color/colorPrimary"
         app:borderWidth="0dp"
