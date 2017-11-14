@@ -16,12 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,13 +28,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import ubiquasif.uqac.betterwithstrangers.Models.Event;
 import ubiquasif.uqac.betterwithstrangers.R;
 
 
-public class CreateEventFragment extends Fragment
-        implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class CreateEventFragment extends Fragment {
 
     private TextView showDate;
     private TextView showTime;
@@ -48,6 +45,7 @@ public class CreateEventFragment extends Fragment
 
     private OnFragmentInteractionListener mListener;
 
+    private Calendar mCalendar;
     private FirebaseFirestore mFirestore;
 
     public CreateEventFragment() {
@@ -76,6 +74,7 @@ public class CreateEventFragment extends Fragment
             //mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        mCalendar = new GregorianCalendar();
         mFirestore = FirebaseFirestore.getInstance();
     }
 
@@ -89,7 +88,7 @@ public class CreateEventFragment extends Fragment
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         showDate = view.findViewById(R.id.show_date);
@@ -99,7 +98,6 @@ public class CreateEventFragment extends Fragment
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 DatePickerFragment fragment = new DatePickerFragment();
                 fragment.show(getFragmentManager(), "date");
             }
@@ -112,7 +110,6 @@ public class CreateEventFragment extends Fragment
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 TimePickerFragment fragment = new TimePickerFragment();
                 fragment.show(getFragmentManager(), "timePicker");
             }
@@ -122,38 +119,11 @@ public class CreateEventFragment extends Fragment
         privateSwitch = view.findViewById(R.id.private_switch);
         placeEdit = view.findViewById(R.id.placeEvent);
 
-        fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                // Not all fields are handled yet
-                Event event = new Event(
-                        FirebaseAuth.getInstance().getUid(),
-                        nameEdit.getText().toString(),
-                        privateSwitch.isChecked(),
-                        null,
-                        placeEdit.getText().toString()
-                );
-
-                mFirestore.collection("events")
-                        .add(event)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Toast.makeText(
-                                        getActivity(),
-                                        "Document written with ID " + documentReference.getId(),
-                                        Toast.LENGTH_LONG
-                                ).show();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getActivity(), "Error adding document", Toast.LENGTH_LONG).show();
-                            }
-                        });
+                addEvent();
             }
         });
     }
@@ -197,59 +167,48 @@ public class CreateEventFragment extends Fragment
         void onFragmentInteraction(Uri uri);
     }
 
-    /**
-     * This callback method, call DatePickerFragment class,
-     * DatePickerFragment class returns calendar view.
-     *
-     * @param view
-     */
-    public void datePicker(View view) {
+    public void updateDate(int year, int month, int day) {
+        mCalendar.set(year, month, day);
 
-        DatePickerFragment fragment = new DatePickerFragment();
-        fragment.show(getFragmentManager(), "date");
+        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
+        String date = getResources().getString(R.string.picked_date_f, dateFormat.format(mCalendar.getTime()));
+        showDate.setText(date);
     }
 
-    /**
-     * This callback method, call TimePickerFragment class,
-     * TimePickerFragment class returns time view.
-     *
-     * @param view
-     */
-    public void timePicker(View view) {
-        TimePickerFragment newFragment = new TimePickerFragment();
-        newFragment.show(getFragmentManager(), "timePicker");
-    }
+    public void updateTime(int hourOfDay, int minute) {
+        mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        mCalendar.set(Calendar.MINUTE, minute);
 
-    /**
-     * To set date on TextView
-     */
-    public void setDateTest(final Calendar calendar) {
-        final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-        showDate.setText("Date choisie : " + dateFormat.format(calendar.getTime()));
-
-    }
-
-    /**
-     * To set date on TextView
-     */
-    public void setTimeTest(final String time) {
+        String time = getResources().getString(R.string.picked_time_f, hourOfDay, minute);
         showTime.setText(time);
     }
 
-    /**
-     * To receive a callback when the user sets the date.
-     */
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int day) {
-        //Calendar cal = new GregorianCalendar(year, month, day);
-        //setDate(cal);
-    }
+    public void addEvent() {
+        Snackbar.make(fab, "Ajout de l'événement...", Snackbar.LENGTH_SHORT).show();
 
-    /**
-     * To receive a callback when the user sets the time.
-     */
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        // Do something with the time chosen by the user
+        Event event = new Event(
+                FirebaseAuth.getInstance().getUid(),
+                nameEdit.getText().toString(),
+                privateSwitch.isChecked(),
+                null,
+                mCalendar.getTime(),
+                placeEdit.getText().toString()
+        );
+
+        mFirestore.collection("events")
+                .add(event)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Snackbar.make(fab, "Événement ajouté avec succès!", Snackbar.LENGTH_LONG).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Snackbar.make(fab, "Échec de l'ajout d'événement.", Snackbar.LENGTH_LONG).show();
+                    }
+                });
     }
 
     /**
@@ -288,13 +247,4 @@ public class CreateEventFragment extends Fragment
             );
         }
     }
-
-    /**
-     * This callback method, call DatePickerFragment class,
-     * DatePickerFragment class returns calendar view.
-     */
-    public void addEvent(View view) {
-
-    }
-
 }

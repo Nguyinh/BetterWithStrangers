@@ -35,36 +35,21 @@ public class HostActivity extends AppCompatActivity
     private Fragment profilFragment;
     private Fragment notificationFragment;
 
-    /**
-     * To set date on TextView
-     */
-    private void setDate(final Calendar calendar) {
-        ((CreateEventFragment) createEventFragment).setDateTest(calendar);
-    }
-
-    /**
-     * To set time on TextView
-     */
-    private void setTime(final String time) {
-        ((CreateEventFragment) createEventFragment).setTimeTest(time);
-
-    }
 
     /**
      * To receive a callback when the user sets the date.
      */
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        Calendar cal = new GregorianCalendar(year, month, day);
-        setDate(cal);
+        ((CreateEventFragment)createEventFragment).updateDate(year, month, day);
     }
 
     /**
      * To receive a callback when the user sets the time.
      */
+    @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        String time = String.format(Locale.FRENCH, "Heure choisie : %02d:%02d", hourOfDay, minute);
-        setTime(time);
+        ((CreateEventFragment)createEventFragment).updateTime(hourOfDay, minute);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
