@@ -124,6 +124,15 @@ public class CreateEventFragment extends Fragment {
 
         tags = view.findViewById(R.id.tags);
         tags.addChipTerminator(' ', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_TO_TERMINATOR);
+        tags.addChipTerminator('\n', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_TO_TERMINATOR);
+        tags.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean focus) {
+                if (!focus) {
+                    tags.chipifyAllUnterminatedTokens();
+                }
+            }
+        });
 
         fab = view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -190,6 +199,7 @@ public class CreateEventFragment extends Fragment {
     }
 
     public void addEvent() {
+        tags.chipifyAllUnterminatedTokens();
         Snackbar.make(fab, "Ajout de l'événement...", Snackbar.LENGTH_SHORT).show();
 
         Event event = new Event(

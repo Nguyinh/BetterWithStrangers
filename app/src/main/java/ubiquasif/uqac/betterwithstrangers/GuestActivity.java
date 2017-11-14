@@ -30,11 +30,14 @@ public class GuestActivity extends AppCompatActivity
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_search:
+                    setTitle("Rechercher un événement");
                     return true;
                 case R.id.navigation_dashboard:
+                    setTitle("Dashboard");
                     getSupportFragmentManager().beginTransaction().replace(R.id.main_container, dashboardFragment).commit();
                     return true;
                 case R.id.navigation_notifications:
+                    setTitle("Notifications");
                     getSupportFragmentManager().beginTransaction().replace(R.id.main_container, notificationFragment).commit();
                     return true;
                 case R.id.navigation_switch:
@@ -42,6 +45,7 @@ public class GuestActivity extends AppCompatActivity
                     startActivity(intent);
                     return true;
                 case R.id.navigation_profil:
+                    setTitle("Profil");
                     getSupportFragmentManager().beginTransaction().replace(R.id.main_container, profilFragment).commit();
                     return true;
             }
@@ -60,6 +64,8 @@ public class GuestActivity extends AppCompatActivity
 
         // Fix navigation bar strange behavior
         Helper_NavigationBottomBar.disableShiftMode(navigation);
+
+        setTitle("Rechercher un événement");
 
         profilFragment = ProfileFragment.newInstance(null, null);
         dashboardFragment = DashboardFragment.newInstance(null, null);
