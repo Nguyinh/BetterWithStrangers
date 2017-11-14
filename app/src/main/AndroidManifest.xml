@@ -16,11 +16,13 @@
 
         <activity
             android:name=".GuestActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".HostActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustPan" />
 
         <activity android:name=".FirstConnectionActivity">
             <intent-filter>
