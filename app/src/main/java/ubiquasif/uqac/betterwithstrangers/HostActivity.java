@@ -18,6 +18,7 @@ import android.widget.TimePicker;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 import ubiquasif.uqac.betterwithstrangers.Fragments.CreateEventFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.NotificationFragment;
@@ -62,7 +63,7 @@ public class HostActivity extends AppCompatActivity
      * To receive a callback when the user sets the time.
      */
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        String time = "Heure choisie : " + String.valueOf(hourOfDay) + "h" + String.valueOf(minute) + "\n";
+        String time = String.format(Locale.FRENCH, "Heure choisie : %02d:%02d", hourOfDay, minute);
         setTime(time);
     }
 
