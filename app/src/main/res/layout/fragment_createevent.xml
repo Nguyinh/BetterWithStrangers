@@ -1,138 +1,142 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ubiquasif.uqac.betterwithstrangers.Fragments.CreateEventFragment">
 
-
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp">
 
-        <RelativeLayout
+        <!--Nom de la soirée-->
+        <EditText
+            android:id="@+id/nameEvent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="10dp"
+            android:ems="14"
+            android:hint="Nom de votre événement"
+            android:textSize="18sp" />
 
-            //Nom de la soirée
-            <EditText
-                android:id="@+id/nameEvent"
-                android:layout_width="match_parent"
-                android:layout_alignParentRight="true"
+        <LinearLayout
+            android:id="@+id/public_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nameEvent"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:ems="14"
-                android:hint="NomDeVotreSuperSoirée"
-                android:textSize="25dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"/>
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:text="Événement public ?"
+                android:textSize="18sp" />
 
-
-            //Public/Privée
             <Switch
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
                 android:id="@+id/switch1"
-                android:layout_below="@id/nameEvent"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Public / Privée   "
-                android:textSize="20dp"/>
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
-            //Tags descriptif d'evenements
-            <EditText
-                android:id="@+id/tags"
-                android:layout_below="@id/switch1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Tags, Mots clefs"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"/>
+        <!--Tags descriptifs d'événements-->
+        <EditText
+            android:id="@+id/tags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/public_layout"
+            android:layout_marginBottom="10dp"
+            android:ems="10"
+            android:hint="Mots-clés" />
 
-            //date de l'evenement
+        <!--Date de l'événement-->
+        <LinearLayout
+            android:id="@+id/date_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tags"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/show_date"
-                android:layout_below="@id/tags"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="Date choisie :"
-                android:textSize="18dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"/>
+                android:layout_weight="1"
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/picDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Modifier Date"
                 android:onClick="datePicker"
-                android:layout_below="@id/tags"
-                android:layout_alignParentRight="true"
-                android:textSize="10dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"/>
+                android:text="Modifier la date"
+                android:textSize="10sp" />
+
+        </LinearLayout>
 
 
-            //heure de l'evenement
+        <!--Heure de l'événement-->
+        <LinearLayout
+            android:id="@+id/time_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/date_layout"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/show_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/picDate"
                 android:text="Heure choisie :"
-                android:textSize="18dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"/>
+                android:layout_weight="1"
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/picTime"
-                android:layout_below="@id/picDate"
-                android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Modifier l'heure"
                 android:onClick="timePicker"
-                android:textSize="10dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"/>
+                android:text="Modifier l'heure"
+                android:textSize="10sp" />
 
-            //Lieu
-            <EditText
-                android:id="@+id/placeEvent"
-                android:layout_width="match_parent"
-                android:layout_alignParentRight="true"
-                android:layout_height="wrap_content"
-                android:ems="14"
-                android:hint="LieuDeVotreSuperSoirée"
-                android:textSize="20dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_below="@id/picTime"/>
+        </LinearLayout>
 
+        <!--Lieu-->
+        <EditText
+            android:id="@+id/placeEvent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/time_layout"
+            android:ems="14"
+            android:hint="Lieu de l'événement"
+            android:textSize="18sp" />
 
-            //Bouton de création de soirée
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:tint="@color/cardview_light_background"
-                app:backgroundTint="@color/colorPrimary"
-                android:src="@drawable/com_facebook_button_like_icon_selected"
-                android:layout_margin="@dimen/fui_auth_method_button_margin"
-                android:layout_below="@id/placeEvent"
-                android:layout_alignParentRight="true"
-                app:borderWidth="0dp"
-                app:elevation="6dp"
-                app:fabSize="normal"
-                android:onClick="addEvent"/>
+        <!--Bouton de création de soirée-->
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/placeEvent"
+            android:layout_margin="@dimen/fui_auth_method_button_margin"
+            android:onClick="addEvent"
+            android:src="@drawable/com_facebook_button_like_icon_selected"
+            android:tint="@color/cardview_light_background"
+            app:backgroundTint="@color/colorPrimary"
+            app:borderWidth="0dp"
+            app:elevation="6dp"
+            app:fabSize="normal" />
+    </RelativeLayout>
 
-        </RelativeLayout>
-
-
-
-    </ScrollView>
-
-
-
-</FrameLayout>
+</ScrollView>

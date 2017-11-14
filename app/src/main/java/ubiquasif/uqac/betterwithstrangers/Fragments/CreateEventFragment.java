@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,15 +20,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.text.DateFormat;
-
 import java.util.Calendar;
 
 import ubiquasif.uqac.betterwithstrangers.R;
 
-
-/**
- * Created by Amandine on 11/11/2017.
- */
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,12 +34,8 @@ import ubiquasif.uqac.betterwithstrangers.R;
  * create an instance of this fragment.
  */
 public class CreateEventFragment extends Fragment
-        implements DatePickerDialog.OnDateSetListener,TimePickerDialog.OnTimeSetListener{
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+        implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
-
-    // TODO: Rename and change types of parameters
     TextView showDate = null;
     TextView showTime = null;
     FloatingActionButton fab = null;
@@ -60,10 +50,8 @@ public class CreateEventFragment extends Fragment
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     *
      * @return A new instance of fragment ProfilFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static CreateEventFragment newInstance() {
         CreateEventFragment fragment = new CreateEventFragment();
         Bundle args = new Bundle();
@@ -79,11 +67,7 @@ public class CreateEventFragment extends Fragment
             //mParam1 = getArguments().getString(ARG_PARAM1);
             //mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
-
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -93,7 +77,6 @@ public class CreateEventFragment extends Fragment
 
         return view;
     }
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -110,7 +93,7 @@ public class CreateEventFragment extends Fragment
                 DatePickerFragment fragment = new DatePickerFragment();
                 fragment.show(getFragmentManager(), "date");
             }
-        }) ;
+        });
 
         showTime = view.findViewById(R.id.show_time);
 
@@ -123,7 +106,7 @@ public class CreateEventFragment extends Fragment
                 TimePickerFragment fragment = new TimePickerFragment();
                 fragment.show(getFragmentManager(), "timePicker");
             }
-        }) ;
+        });
 
         fab = (FloatingActionButton) view.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -133,8 +116,6 @@ public class CreateEventFragment extends Fragment
                         .setAction("Action", null).show();
             }
         });
-
-
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -179,9 +160,10 @@ public class CreateEventFragment extends Fragment
     /**
      * This callback method, call DatePickerFragment class,
      * DatePickerFragment class returns calendar view.
+     *
      * @param view
      */
-    public void datePicker(View view){
+    public void datePicker(View view) {
 
         DatePickerFragment fragment = new DatePickerFragment();
         fragment.show(getFragmentManager(), "date");
@@ -190,6 +172,7 @@ public class CreateEventFragment extends Fragment
     /**
      * This callback method, call TimePickerFragment class,
      * TimePickerFragment class returns time view.
+     *
      * @param view
      */
     public void timePicker(View view) {
@@ -199,17 +182,15 @@ public class CreateEventFragment extends Fragment
 
     /**
      * To set date on TextView
-     * @param calendar
      */
     public void setDateTest(final Calendar calendar) {
         final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-        showDate.setText("Date choisie : "+dateFormat.format(calendar.getTime()));
+        showDate.setText("Date choisie : " + dateFormat.format(calendar.getTime()));
 
     }
 
     /**
      * To set date on TextView
-     * @param time
      */
     public void setTimeTest(final String time) {
         showTime.setText(time);
@@ -217,10 +198,6 @@ public class CreateEventFragment extends Fragment
 
     /**
      * To receive a callback when the user sets the date.
-     * @param view
-     * @param year
-     * @param month
-     * @param day
      */
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
@@ -230,9 +207,6 @@ public class CreateEventFragment extends Fragment
 
     /**
      * To receive a callback when the user sets the time.
-     * @param view
-     * @param hourOfDay
-     * @param minute
      */
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         // Do something with the time chosen by the user
@@ -251,17 +225,13 @@ public class CreateEventFragment extends Fragment
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
 
-
             return new DatePickerDialog(getActivity(),
                     (DatePickerDialog.OnDateSetListener)
-                    getActivity(), year, month, day);
+                            getActivity(), year, month, day);
         }
 
     }
 
-    /**
-     *
-     */
     public static class TimePickerFragment extends DialogFragment {
 
         @Override
@@ -277,16 +247,13 @@ public class CreateEventFragment extends Fragment
                     //DateFormat.is24HourFormat(getActivity())
             );
         }
-
     }
-
 
     /**
      * This callback method, call DatePickerFragment class,
      * DatePickerFragment class returns calendar view.
-     * @param view
      */
-    public void addEvent(View view){
+    public void addEvent(View view) {
 
     }
 

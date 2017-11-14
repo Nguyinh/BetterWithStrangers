@@ -28,10 +28,7 @@ public class HostActivity extends AppCompatActivity
         implements CreateEventFragment.OnFragmentInteractionListener,
         ProfileFragment.OnFragmentInteractionListener,
         NotificationFragment.OnFragmentInteractionListener,
-        DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
-
-
-    private Toolbar toolbar;
+        DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     private Fragment createEventFragment;
     private Fragment profilFragment;
@@ -39,28 +36,21 @@ public class HostActivity extends AppCompatActivity
 
     /**
      * To set date on TextView
-     * @param calendar
      */
     private void setDate(final Calendar calendar) {
-        ((CreateEventFragment)createEventFragment).setDateTest(calendar);
+        ((CreateEventFragment) createEventFragment).setDateTest(calendar);
     }
 
     /**
      * To set time on TextView
-     * @param time
      */
     private void setTime(final String time) {
-        ((CreateEventFragment)createEventFragment).setTimeTest(time);
+        ((CreateEventFragment) createEventFragment).setTimeTest(time);
 
     }
 
-
     /**
      * To receive a callback when the user sets the date.
-     * @param view
-     * @param year
-     * @param month
-     * @param day
      */
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
@@ -70,12 +60,9 @@ public class HostActivity extends AppCompatActivity
 
     /**
      * To receive a callback when the user sets the time.
-     * @param view
-     * @param hourOfDay
-     * @param minute
      */
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        String time = "Heure choisie : "+ String.valueOf(hourOfDay) + "h" + String.valueOf(minute) + "\n";
+        String time = "Heure choisie : " + String.valueOf(hourOfDay) + "h" + String.valueOf(minute) + "\n";
         setTime(time);
     }
 
@@ -86,14 +73,14 @@ public class HostActivity extends AppCompatActivity
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_host:
-                    toolbar.setTitle("Créer un événement");
+                    setTitle("Créer un événement");
                     getSupportFragmentManager().beginTransaction().replace(R.id.main_container, createEventFragment).commit();
                     return true;
                 case R.id.navigation_dashboard:
-                    toolbar.setTitle("Dashboard");
+                    setTitle("Dashboard");
                     return true;
                 case R.id.navigation_notifications:
-                    toolbar.setTitle("Notifications");
+                    setTitle("Notifications");
                     getSupportFragmentManager().beginTransaction().replace(R.id.main_container, notificationFragment).commit();
                     return true;
                 case R.id.navigation_switch:
@@ -101,7 +88,7 @@ public class HostActivity extends AppCompatActivity
                     startActivity(intent);
                     return true;
                 case R.id.navigation_profil:
-                    toolbar.setTitle("Profil");
+                    setTitle("Profil");
                     getSupportFragmentManager().beginTransaction().replace(R.id.main_container, profilFragment).commit();
                     return true;
             }
@@ -112,18 +99,7 @@ public class HostActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_host);
-
-        // Set content view AFTER ABOVE sequence (to avoid crash)
-        this.setContentView(R.layout.activity_host);
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Créer un événement");
-        toolbar.setTitleTextColor(Color.WHITE);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowCustomEnabled(false);
-        setToolbar(toolbar);
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -134,20 +110,15 @@ public class HostActivity extends AppCompatActivity
         profilFragment = ProfileFragment.newInstance(null, null);
         notificationFragment = NotificationFragment.newInstance(null, null);
         createEventFragment = CreateEventFragment.newInstance();
-        //affichage de la création de soirée directement après le switch
+
+        // Affichage de la création de soirée directement après le switch
+        setTitle("Créer un événement");
         getSupportFragmentManager().beginTransaction().replace(R.id.main_container, createEventFragment).commit();
-
-
-    }
-
-    public void setToolbar(Toolbar toolbar) {
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-        Log.println(Log.DEBUG,"debug", "Fragment interaction detected");
+        Log.println(Log.DEBUG, "debug", "Fragment interaction detected");
     }
 
 }
