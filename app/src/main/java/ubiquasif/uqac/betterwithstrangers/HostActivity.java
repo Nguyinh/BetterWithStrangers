@@ -3,24 +3,20 @@ package ubiquasif.uqac.betterwithstrangers;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Locale;
 
 import ubiquasif.uqac.betterwithstrangers.Fragments.CreateEventFragment;
+import ubiquasif.uqac.betterwithstrangers.Fragments.DashboardFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.NotificationFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.ProfileFragment;
 import ubiquasif.uqac.betterwithstrangers.Helpers.Helper_NavigationBottomBar;
@@ -29,12 +25,13 @@ public class HostActivity extends AppCompatActivity
         implements CreateEventFragment.OnFragmentInteractionListener,
         ProfileFragment.OnFragmentInteractionListener,
         NotificationFragment.OnFragmentInteractionListener,
+        DashboardFragment.OnFragmentInteractionListener,
         DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     private Fragment createEventFragment;
     private Fragment profilFragment;
     private Fragment notificationFragment;
-
+    private Fragment dashboardFragment;
 
     /**
      * To receive a callback when the user sets the date.
@@ -64,6 +61,7 @@ public class HostActivity extends AppCompatActivity
                     return true;
                 case R.id.navigation_dashboard:
                     setTitle("Dashboard");
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_container, dashboardFragment).commit();
                     return true;
                 case R.id.navigation_notifications:
                     setTitle("Notifications");
@@ -95,6 +93,8 @@ public class HostActivity extends AppCompatActivity
 
         profilFragment = ProfileFragment.newInstance(null, null);
         notificationFragment = NotificationFragment.newInstance(null, null);
+        dashboardFragment = DashboardFragment.newInstance(null, null);
+
         createEventFragment = CreateEventFragment.newInstance();
 
         // Affichage de la création de soirée directement après le switch

@@ -10,15 +10,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
+import ubiquasif.uqac.betterwithstrangers.Fragments.DashboardFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.NotificationFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.ProfileFragment;
 import ubiquasif.uqac.betterwithstrangers.Helpers.Helper_NavigationBottomBar;
 
 public class GuestActivity extends AppCompatActivity
-        implements ProfileFragment.OnFragmentInteractionListener, NotificationFragment.OnFragmentInteractionListener {
+        implements ProfileFragment.OnFragmentInteractionListener, NotificationFragment.OnFragmentInteractionListener,
+        DashboardFragment.OnFragmentInteractionListener{
 
     private Fragment profilFragment;
     private Fragment notificationFragment;
+    private Fragment dashboardFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -29,6 +32,7 @@ public class GuestActivity extends AppCompatActivity
                 case R.id.navigation_search:
                     return true;
                 case R.id.navigation_dashboard:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.main_container, dashboardFragment).commit();
                     return true;
                 case R.id.navigation_notifications:
                     getSupportFragmentManager().beginTransaction().replace(R.id.main_container, notificationFragment).commit();
@@ -58,7 +62,7 @@ public class GuestActivity extends AppCompatActivity
         Helper_NavigationBottomBar.disableShiftMode(navigation);
 
         profilFragment = ProfileFragment.newInstance(null, null);
-
+        dashboardFragment = DashboardFragment.newInstance(null, null);
         notificationFragment = NotificationFragment.newInstance(null, null);
     }
 
