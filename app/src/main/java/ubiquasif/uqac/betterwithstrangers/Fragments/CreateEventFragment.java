@@ -8,6 +8,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -46,6 +48,7 @@ public class CreateEventFragment extends Fragment
     // TODO: Rename and change types of parameters
     TextView showDate = null;
     TextView showTime = null;
+    FloatingActionButton fab = null;
 
     private OnFragmentInteractionListener mListener;
 
@@ -76,6 +79,7 @@ public class CreateEventFragment extends Fragment
             //mParam1 = getArguments().getString(ARG_PARAM1);
             //mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
 
 
     }
@@ -120,6 +124,15 @@ public class CreateEventFragment extends Fragment
                 fragment.show(getFragmentManager(), "timePicker");
             }
         }) ;
+
+        fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
 
 
     }
@@ -264,6 +277,16 @@ public class CreateEventFragment extends Fragment
                     //DateFormat.is24HourFormat(getActivity())
             );
         }
+
+    }
+
+
+    /**
+     * This callback method, call DatePickerFragment class,
+     * DatePickerFragment class returns calendar view.
+     * @param view
+     */
+    public void addEvent(View view){
 
     }
 
