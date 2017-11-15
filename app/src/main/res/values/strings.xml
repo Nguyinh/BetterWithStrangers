@@ -12,6 +12,7 @@
     <string name="no_connection">Aucun accès Internet</string>
     <string name="connected_as">Connecté en tant que %1$s (%2$s)</string>
 
+    <!-- Navbar -->
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
@@ -19,4 +20,17 @@
     <string name="title_profil">Profil</string>
     <string name="title_search">Rechercher</string>
     <string name="title_host">Proposer</string>
+    <!-- End Navbar -->
+
+    <!-- Activities -->
+    <string name="title_activity_maps">Carte</string>
+    <!-- End Activities -->
+
+    <!-- Map -->
+
+    <string name="default_info_title">Localisation impossible</string>
+    <string name="default_info_snippet">Permission manquante</string>
+    <string name="pick_place">Choisis un lieu</string>
+    <string name="option_get_place">Get place</string>
+    <!-- End Map -->
 </resources>
