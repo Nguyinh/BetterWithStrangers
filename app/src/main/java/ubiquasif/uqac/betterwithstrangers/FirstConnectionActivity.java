@@ -86,7 +86,7 @@ public class FirstConnectionActivity extends AppCompatActivity {
     }
 
     private void proceed() {
-        Intent intent = new Intent(this, GuestActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
     }

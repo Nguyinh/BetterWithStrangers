@@ -13,15 +13,16 @@
     <string name="connected_as">Connecté en tant que %1$s (%2$s)</string>
 
     <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
+    <string name="title_timeline">Historique</string>
     <string name="title_notifications">Notifications</string>
-    <string name="title_switch">Switch</string>
     <string name="title_profil">Profil</string>
-    <string name="title_search">Rechercher</string>
-    <string name="title_host">Proposer</string>
+    <string name="title_party">Soirée</string>
 
     <string name="picked_date">Date choisie :</string>
     <string name="picked_date_f">Date choisie : %1$s</string>
     <string name="picked_time">Heure choisie :</string>
     <string name="picked_time_f">Heure choisie : %1$02d:%2$02d</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
