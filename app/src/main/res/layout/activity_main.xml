@@ -21,6 +21,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="?android:attr/windowBackground"
-        app:menu="@menu/navigation_host" />
+        app:menu="@menu/navigation_bar" />
 
 </RelativeLayout>
