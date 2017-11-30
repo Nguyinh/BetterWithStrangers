@@ -7,9 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.text.Editable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,49 +20,28 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.hootsuite.nachos.ChipConfiguration;
 import com.hootsuite.nachos.NachoTextView;
-import com.hootsuite.nachos.chip.Chip;
-import com.hootsuite.nachos.chip.ChipSpan;
-import com.hootsuite.nachos.chip.ChipSpanChipCreator;
 import com.hootsuite.nachos.terminator.ChipTerminatorHandler;
-import com.hootsuite.nachos.tokenizer.ChipTokenizer;
-import com.hootsuite.nachos.tokenizer.SpanChipTokenizer;
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import ubiquasif.uqac.betterwithstrangers.FirstConnectionActivity;
 import ubiquasif.uqac.betterwithstrangers.R;
 
 
 public class ProfileFragment extends Fragment implements View.OnClickListener {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private OnFragmentInteractionListener mListener;
 
     private NachoTextView tags;
 
     private String[] suggestions = new String[]{"Tortilla Chips", "Melted Cheese", "Salsa", "Guacamole", "Mexico", "Jalapeno"};
-    private List<String> savedPrefs = new ArrayList<String>();
 
     public ProfileFragment() {
     }
 
-    // TODO: Rename and change types and number of parameters
-    public static ProfileFragment newInstance(String param1, String param2) {
+    public static ProfileFragment newInstance() {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,10 +49,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -124,21 +96,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line, suggestions);
         tags.setAdapter(adapter);
-
-        for (String word : savedPrefs) {
-            Log.d("Nachos", word);
-            //tags.getChipTokenizer().applyConfiguration(tags.getEditableText(), new ChipConfiguration());
-        }
-
-        //tags.setTextWithChips();
-        //tags.performValidation();
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -174,16 +131,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    @Override
-    public void onStop()
-    {
-        for(Chip chip : tags.getAllChips()) {
-            savedPrefs.add(chip.getText().toString());
-            tags.getChipTokenizer().deleteChip(chip, tags.getEditableText());
-        }
-
-        super.onStop();
-    }
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name

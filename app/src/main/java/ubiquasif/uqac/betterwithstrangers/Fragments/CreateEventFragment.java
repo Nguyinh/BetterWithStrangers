@@ -52,15 +52,8 @@ public class CreateEventFragment extends Fragment {
     private FirebaseFirestore mFirestore;
 
     public CreateEventFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment ProfilFragment.
-     */
     public static CreateEventFragment newInstance() {
         CreateEventFragment fragment = new CreateEventFragment();
         Bundle args = new Bundle();
@@ -72,10 +65,6 @@ public class CreateEventFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            //mParam1 = getArguments().getString(ARG_PARAM1);
-            //mParam2 = getArguments().getString(ARG_PARAM2);
-        }
 
         mCalendar = new GregorianCalendar();
         mFirestore = FirebaseFirestore.getInstance();
@@ -84,9 +73,7 @@ public class CreateEventFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_createevent, container, false);
-
         return view;
     }
 
@@ -96,7 +83,7 @@ public class CreateEventFragment extends Fragment {
 
         showDate = view.findViewById(R.id.show_date);
 
-        Button changeDate = (Button) view.findViewById(R.id.picDate);
+        Button changeDate = view.findViewById(R.id.picDate);
         changeDate.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -108,7 +95,7 @@ public class CreateEventFragment extends Fragment {
 
         showTime = view.findViewById(R.id.show_time);
 
-        Button changeTime = (Button) view.findViewById(R.id.picTime);
+        Button changeTime = view.findViewById(R.id.picTime);
         changeTime.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -143,13 +130,6 @@ public class CreateEventFragment extends Fragment {
         });
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -165,21 +145,6 @@ public class CreateEventFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
     public void updateDate(int year, int month, int day) {
@@ -227,10 +192,13 @@ public class CreateEventFragment extends Fragment {
                 });
     }
 
-    /**
-     * Create a DatePickerFragment class that extends DialogFragment.
-     * Define the onCreateDialog() method to return an instance of DatePickerDialog
-     */
+
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
+    }
+
+
     public static class DatePickerFragment extends DialogFragment {
 
         @Override
@@ -246,6 +214,7 @@ public class CreateEventFragment extends Fragment {
         }
 
     }
+
 
     public static class TimePickerFragment extends DialogFragment {
 

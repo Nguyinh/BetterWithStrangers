@@ -13,11 +13,10 @@ import android.view.MenuItem;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
-
 import ubiquasif.uqac.betterwithstrangers.Fragments.CreateEventFragment;
-import ubiquasif.uqac.betterwithstrangers.Fragments.TimelineFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.NotificationFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.ProfileFragment;
+import ubiquasif.uqac.betterwithstrangers.Fragments.TimelineFragment;
 import ubiquasif.uqac.betterwithstrangers.Helpers.Helper_NavigationBottomBar;
 
 public class MainActivity extends AppCompatActivity
@@ -37,7 +36,7 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        ((CreateEventFragment)createEventFragment).updateDate(year, month, day);
+        ((CreateEventFragment) createEventFragment).updateDate(year, month, day);
     }
 
     /**
@@ -45,7 +44,7 @@ public class MainActivity extends AppCompatActivity
      */
     @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        ((CreateEventFragment)createEventFragment).updateTime(hourOfDay, minute);
+        ((CreateEventFragment) createEventFragment).updateTime(hourOfDay, minute);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -86,10 +85,10 @@ public class MainActivity extends AppCompatActivity
         // Fix navigation bar strange behavior
         Helper_NavigationBottomBar.disableShiftMode(navigation);
 
-        profilFragment = ProfileFragment.newInstance(null, null);
         notificationFragment = NotificationFragment.newInstance(null, null);
         timelineFragment = TimelineFragment.newInstance(null, null);
 
+        profilFragment = ProfileFragment.newInstance();
         createEventFragment = CreateEventFragment.newInstance();
 
         // Affichage de la création de soirée directement après le switch
