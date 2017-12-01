@@ -3,8 +3,6 @@ package ubiquasif.uqac.betterwithstrangers.Fragments;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -45,8 +43,6 @@ public class CreateEventFragment extends Fragment {
     private Switch privateSwitch;
     private FloatingActionButton fab;
     private NachoTextView tags;
-
-    private OnFragmentInteractionListener mListener;
 
     private Calendar mCalendar;
     private FirebaseFirestore mFirestore;
@@ -120,30 +116,13 @@ public class CreateEventFragment extends Fragment {
             }
         });
 
-        fab = view.findViewById(R.id.fab);
+        fab = view.findViewById(R.id.send_event_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addEvent();
             }
         });
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
     }
 
     public void updateDate(int year, int month, int day) {
@@ -189,12 +168,6 @@ public class CreateEventFragment extends Fragment {
                         Snackbar.make(fab, "Échec de l'ajout d'événement.", Snackbar.LENGTH_LONG).show();
                     }
                 });
-    }
-
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
 

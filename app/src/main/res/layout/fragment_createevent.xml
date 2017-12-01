@@ -128,15 +128,14 @@
 
     <!--Bouton de création de soirée-->
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/send_event_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="16dp"
         android:layout_marginEnd="16dp"
-        android:src="@drawable/com_facebook_button_like_icon_selected"
-        app:backgroundTint="@color/colorPrimary"
+        app:srcCompat="@drawable/ic_done_white_24dp"
         app:borderWidth="0dp"
         app:elevation="6dp"
         app:fabSize="normal" />

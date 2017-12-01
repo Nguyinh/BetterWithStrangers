@@ -4,25 +4,22 @@
     <string name="facebook_application_id" translatable="false">402771703476194</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb402771703476194</string>
 
-    <string name="sign_in_button">Se connecter</string>
+    <string name="retry_sign_in">Se reconnecter</string>
     <string name="sign_out_button">Se déconnecter</string>
-    <string name="proceed_button">Continuer</string>
     <string name="sign_in_cancelled">Connexion annulée</string>
     <string name="sign_in_error">Erreur durant la connexion</string>
     <string name="no_connection">Aucun accès Internet</string>
-    <string name="connected_as">Connecté en tant que %1$s (%2$s)</string>
 
-    <string name="title_home">Home</string>
-    <string name="title_timeline">Historique</string>
+    <string name="title_party">Soirées</string>
     <string name="title_notifications">Notifications</string>
-    <string name="title_profil">Profil</string>
-    <string name="title_party">Soirée</string>
+    <string name="title_timeline">Historique</string>
+    <string name="title_profile">Profil</string>
 
     <string name="picked_date">Date choisie :</string>
     <string name="picked_date_f">Date choisie : %1$s</string>
     <string name="picked_time">Heure choisie :</string>
     <string name="picked_time_f">Heure choisie : %1$02d:%2$02d</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_create_event">Nouvel événement</string>
+    <string name="create_event">Enregistrer</string>
 </resources>
