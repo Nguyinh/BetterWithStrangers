@@ -2,6 +2,8 @@ package ubiquasif.uqac.betterwithstrangers.Fragments;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.net.Uri;
@@ -12,6 +14,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +24,10 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,7 +44,8 @@ import ubiquasif.uqac.betterwithstrangers.Models.Event;
 import ubiquasif.uqac.betterwithstrangers.R;
 
 
-public class CreateEventFragment extends Fragment {
+public class CreateEventFragment extends Fragment
+{
 
     private TextView showDate;
     private TextView showTime;
@@ -46,6 +55,7 @@ public class CreateEventFragment extends Fragment {
     private FloatingActionButton fab;
     private NachoTextView tags;
 
+    private AutoCompleteFragment autoCompleteFragment;
     private OnFragmentInteractionListener mListener;
 
     private Calendar mCalendar;
@@ -79,6 +89,8 @@ public class CreateEventFragment extends Fragment {
 
         mCalendar = new GregorianCalendar();
         mFirestore = FirebaseFirestore.getInstance();
+
+
     }
 
     @Override
@@ -141,6 +153,13 @@ public class CreateEventFragment extends Fragment {
                 addEvent();
             }
         });
+
+
+        autoCompleteFragment = new AutoCompleteFragment();
+        FragmentManager fragmentManager = getActivity().getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.autocomplete_fragment_container, autoCompleteFragment).commit();
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
