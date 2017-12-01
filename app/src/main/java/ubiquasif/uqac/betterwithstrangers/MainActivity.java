@@ -1,6 +1,7 @@
 package ubiquasif.uqac.betterwithstrangers;
 
 import android.app.DatePickerDialog;
+import android.app.FragmentManager;
 import android.app.TimePickerDialog;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +14,10 @@ import android.view.MenuItem;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+import com.google.android.gms.location.places.Places;
 
 import ubiquasif.uqac.betterwithstrangers.Fragments.CreateEventFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.TimelineFragment;
@@ -25,12 +30,16 @@ public class MainActivity extends AppCompatActivity
         ProfileFragment.OnFragmentInteractionListener,
         NotificationFragment.OnFragmentInteractionListener,
         TimelineFragment.OnFragmentInteractionListener,
-        DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+        DatePickerDialog.OnDateSetListener,
+        TimePickerDialog.OnTimeSetListener,
+        GoogleApiClient.OnConnectionFailedListener{
 
     private Fragment createEventFragment;
     private Fragment profilFragment;
     private Fragment notificationFragment;
     private Fragment timelineFragment;
+
+    private  GoogleApiClient googleApiClient;
 
     /**
      * To receive a callback when the user sets the date.
@@ -95,11 +104,28 @@ public class MainActivity extends AppCompatActivity
         // Affichage de la création de soirée directement après le switch
         setTitle("Créer un événement");
         getSupportFragmentManager().beginTransaction().replace(R.id.main_container, createEventFragment).commit();
+
+        googleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(this, this)
+                .build();
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
+    {
+        Log.d("onConnectionFailed", connectionResult.getErrorMessage());
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
         Log.println(Log.DEBUG, "debug", "Fragment interaction detected");
     }
+
+
+
 
 }
