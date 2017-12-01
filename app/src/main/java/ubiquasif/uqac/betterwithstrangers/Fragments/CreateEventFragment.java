@@ -73,8 +73,7 @@ public class CreateEventFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_createevent, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_createevent, container, false);
     }
 
     @Override
@@ -201,6 +200,7 @@ public class CreateEventFragment extends Fragment {
 
     public static class DatePickerFragment extends DialogFragment {
 
+        @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             final Calendar c = Calendar.getInstance();
@@ -218,6 +218,7 @@ public class CreateEventFragment extends Fragment {
 
     public static class TimePickerFragment extends DialogFragment {
 
+        @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the current time as the default values for the picker
