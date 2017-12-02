@@ -22,5 +22,5 @@
     <string name="private_event">Événement privé</string>
     <string name="keywords">Mots-clés</string>
     <string name="event_pending">Ajout de l\'événement&#8230;</string>
-    <string name="event_failure">Échec de l\'ajout d'événement</string>
+    <string name="event_failure">Échec de l\'ajout de l\'événement</string>
 </resources>
