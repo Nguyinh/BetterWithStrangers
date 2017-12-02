@@ -10,16 +10,26 @@ public class Event {
     private List<String> tags;
     private Date timestamp;
     private String placeName;
+    private int numberOfRatings;
+    private double consensus;
 
     public Event() {}
 
-    public Event(String userId, String name, boolean isPrivate, List<String> tags, Date timestamp, String placeName) {
+    public Event(String userId, String name, boolean isPrivate, List<String> tags,
+                 Date timestamp, String placeName) {
+        this(userId, name, isPrivate, tags, timestamp, placeName, 0, 0);
+    }
+
+    public Event(String userId, String name, boolean isPrivate, List<String> tags,
+                 Date timestamp, String placeName, int numberOfRatings, double consensus) {
         this.userId = userId;
         this.name = name;
         this.isPrivate = isPrivate;
         this.tags = tags;
         this.timestamp = timestamp;
         this.placeName = placeName;
+        this.numberOfRatings = numberOfRatings;
+        this.consensus = consensus;
     }
 
     public String getUserId() {
@@ -43,4 +53,8 @@ public class Event {
     public String getPlaceName() {
         return placeName;
     }
+
+    public int getNumberOfRatings() { return numberOfRatings; }
+
+    public double getConsensus() { return consensus; }
 }
