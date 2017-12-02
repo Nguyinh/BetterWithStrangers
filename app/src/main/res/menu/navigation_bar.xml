@@ -18,8 +18,8 @@
         android:title="@string/title_timeline" />
 
     <item
-        android:id="@+id/navigation_profil"
+        android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_person_black_24dp"
-        android:title="@string/title_profil"/>
+        android:title="@string/title_profile"/>
 
 </menu>

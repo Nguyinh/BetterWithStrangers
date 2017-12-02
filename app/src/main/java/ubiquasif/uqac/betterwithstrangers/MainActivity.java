@@ -1,66 +1,40 @@
 package ubiquasif.uqac.betterwithstrangers;
 
-import android.app.DatePickerDialog;
-import android.app.FragmentManager;
-import android.app.TimePickerDialog;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.DatePicker;
-import android.widget.TimePicker;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import com.google.android.gms.location.places.Places;
+
 
 import ubiquasif.uqac.betterwithstrangers.Fragments.CreateEventFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.PartyMapFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.TimelineFragment;
+import ubiquasif.uqac.betterwithstrangers.Fragments.EventListFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.NotificationFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.ProfileFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.TimelineFragment;
 import ubiquasif.uqac.betterwithstrangers.Helpers.Helper_NavigationBottomBar;
 
 public class MainActivity extends AppCompatActivity
-        implements CreateEventFragment.OnFragmentInteractionListener,
-        ProfileFragment.OnFragmentInteractionListener,
+        implements ProfileFragment.OnFragmentInteractionListener,
         NotificationFragment.OnFragmentInteractionListener,
-        TimelineFragment.OnFragmentInteractionListener,
-        DatePickerDialog.OnDateSetListener,
-        TimePickerDialog.OnTimeSetListener,
-        GoogleApiClient.OnConnectionFailedListener{
+        TimelineFragment.OnFragmentInteractionListener {
 
-    private Fragment createEventFragment;
-    private Fragment profilFragment;
+    private Fragment eventListFragment;
+    private Fragment profileFragment;
     private Fragment notificationFragment;
     private Fragment timelineFragment;
     private PartyMapFragment partyMapFragment;
     private  GoogleApiClient googleApiClient;
 
-    /**
-     * To receive a callback when the user sets the date.
-     */
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int day) {
-        ((CreateEventFragment) createEventFragment).updateDate(year, month, day);
-    }
-
-    /**
-     * To receive a callback when the user sets the time.
-     */
-    @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        ((CreateEventFragment) createEventFragment).updateTime(hourOfDay, minute);
-    }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -69,20 +43,20 @@ public class MainActivity extends AppCompatActivity
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_party:
-                    setTitle("Créer un événement");
-                    getSupportFragmentManager().beginTransaction().replace(R.id.main_container, createEventFragment).commit();
+                    setTitle(R.string.title_party);
+                    switchFragment(eventListFragment);
                     return true;
                 case R.id.navigation_timeline:
-                    setTitle("Historique");
-                    getSupportFragmentManager().beginTransaction().replace(R.id.main_container, timelineFragment).commit();
+                    setTitle(R.string.title_timeline);
+                    switchFragment(timelineFragment);
                     return true;
                 case R.id.navigation_notifications:
-                    setTitle("Notifications");
-                    getSupportFragmentManager().beginTransaction().replace(R.id.main_container, notificationFragment).commit();
+                    setTitle(R.string.title_notifications);
+                    switchFragment(notificationFragment);
                     return true;
-                case R.id.navigation_profil:
-                    setTitle("Profil");
-                    getSupportFragmentManager().beginTransaction().replace(R.id.main_container, profilFragment).commit();
+                case R.id.navigation_profile:
+                    setTitle(R.string.title_profile);
+                    switchFragment(profileFragment);
                     return true;
             }
             return false;
@@ -100,32 +74,18 @@ public class MainActivity extends AppCompatActivity
         // Fix navigation bar strange behavior
         Helper_NavigationBottomBar.disableShiftMode(navigation);
 
+        // TODO Check if factory methods / arguments are really necessary here
+        eventListFragment = EventListFragment.newInstance();
         notificationFragment = NotificationFragment.newInstance(null, null);
         timelineFragment = TimelineFragment.newInstance(null, null);
-
-        profilFragment = ProfileFragment.newInstance();
-        createEventFragment = CreateEventFragment.newInstance();
+        profileFragment = ProfileFragment.newInstance();
 
         partyMapFragment = new PartyMapFragment();
         // Affichage de la création de soirée directement après le switch
-        setTitle("Créer un événement");
-        getSupportFragmentManager().beginTransaction().replace(R.id.main_container, createEventFragment).commit();
-
+            setTitle(R.string.title_party);
+            switchFragment(eventListFragment);
         // getFragmentManager().beginTransaction().replace(R.id.main_container, m).commit();
 
-        googleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .enableAutoManage(this, this)
-                .build();
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult)
-    {
-        Log.d("onConnectionFailed", connectionResult.getErrorMessage());
     }
 
     @Override
@@ -133,5 +93,8 @@ public class MainActivity extends AppCompatActivity
         Log.println(Log.DEBUG, "debug", "Fragment interaction detected");
     }
 
+    public void switchFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_container, fragment).commit();
+    }
 
 }
