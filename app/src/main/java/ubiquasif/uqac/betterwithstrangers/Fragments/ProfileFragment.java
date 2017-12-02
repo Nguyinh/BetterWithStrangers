@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.hootsuite.nachos.NachoTextView;
+import com.hootsuite.nachos.chip.Chip;
 import com.hootsuite.nachos.terminator.ChipTerminatorHandler;
 import com.squareup.picasso.Picasso;
 
@@ -83,13 +86,26 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         }
 
         tags = view.findViewById(R.id.preferences);
-        tags.addChipTerminator(' ', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_TO_TERMINATOR);
-        tags.addChipTerminator('\n', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_TO_TERMINATOR);
         tags.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean focus) {
-                if (!focus) {
-                    tags.chipifyAllUnterminatedTokens();
+                if (!focus) {                                       // si perte de focus
+                    tags.chipifyAllUnterminatedTokens();            // "chip" tous les tokens
+                    for(Chip chip : tags.getAllChips())             // parcourt tous les tokens pour vérifier s'ils sont bien dans les suggestions
+                    {
+                        boolean isLegit = false;
+                        for(String sample : suggestions)
+                        {
+                            if(chip.getText() == sample)            // s'il correspond au moins une fois, alors il est validé
+                            {
+                                Log.d("Nachos", sample + " " + chip.getText());
+                                isLegit = true;
+                                break;
+                            }
+                        }
+                        if (!isLegit)                               // sinon il est effacé
+                            tags.getChipTokenizer().deleteChip(chip, tags.getEditableText());
+                    }
                 }
             }
         });
