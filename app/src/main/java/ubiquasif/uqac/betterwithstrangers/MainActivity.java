@@ -25,16 +25,6 @@ public class MainActivity extends AppCompatActivity
     private Fragment notificationFragment;
     private Fragment timelineFragment;
 
-    // TODO Move callbacks to CreateEvent
-//    @Override
-//    public void onDateSet(DatePicker view, int year, int month, int day) {
-//        ((CreateEventFragment) createEventFragment).updateDate(year, month, day);
-//    }
-//
-//    @Override
-//    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-//        ((CreateEventFragment) createEventFragment).updateTime(hourOfDay, minute);
-//    }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {

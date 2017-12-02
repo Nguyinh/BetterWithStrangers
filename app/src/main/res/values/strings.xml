@@ -15,15 +15,15 @@
     <string name="title_timeline">Historique</string>
     <string name="title_profile">Profil</string>
 
-    <string name="picked_date">Date choisie :</string>
-    <string name="picked_date_f">Date choisie : %1$s</string>
-    <string name="picked_time">Heure choisie :</string>
-    <string name="picked_time_f">Heure choisie : %1$02d:%2$02d</string>
+    <string name="picked_date">%1$s</string>
+    <string name="picked_time">%1$02d:%2$02d</string>
 
     <string name="title_activity_create_event">Nouvel événement</string>
-    <string name="create_event">Enregistrer</string>
+    <string name="save_event">Enregistrer</string>
     <string name="event_name">Nom de l\'événement</string>
     <string name="event_location">Lieu de l\'événement</string>
     <string name="private_event">Événement privé</string>
     <string name="keywords">Mots-clés</string>
+    <string name="event_pending">Ajout de l\'événement&#8230;</string>
+    <string name="event_failure">Échec de l\'ajout d'événement</string>
 </resources>
