@@ -15,9 +15,6 @@
     <string name="title_timeline">Historique</string>
     <string name="title_profile">Profil</string>
 
-    <string name="picked_date">%1$s</string>
-    <string name="picked_time">%1$02d:%2$02d</string>
-
     <string name="title_activity_create_event">Nouvel événement</string>
     <string name="save_event">Enregistrer</string>
     <string name="event_name">Nom de l\'événement</string>

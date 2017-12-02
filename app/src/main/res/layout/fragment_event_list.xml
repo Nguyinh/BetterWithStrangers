@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     tools:context="ubiquasif.uqac.betterwithstrangers.Fragments.EventListFragment">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/event_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/item_event">
+
+    </android.support.v7.widget.RecyclerView>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/create_event_fab"
         android:layout_width="wrap_content"

@@ -67,10 +67,8 @@ public class CreateEventActivity
         layout = findViewById(R.id.create_event_layout);
 
         pickedDateTime = new GregorianCalendar();
-
         dateView = findViewById(R.id.event_date);
         timeView = findViewById(R.id.event_time);
-
         updateDateView();
         updateTimeView();
 
@@ -166,19 +164,13 @@ public class CreateEventActivity
 
     private void updateDateView() {
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG);
-        String date = getResources().getString(
-                R.string.picked_date,
-                dateFormat.format(pickedDateTime.getTime())
-        );
+        String date = dateFormat.format(pickedDateTime.getTime());
         dateView.setText(date);
     }
 
     private void updateTimeView() {
-        String time = getResources().getString(
-                R.string.picked_time,
-                pickedDateTime.get(Calendar.HOUR_OF_DAY),
-                pickedDateTime.get(Calendar.MINUTE)
-        );
+        DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+        String time = timeFormat.format(pickedDateTime.getTime());
         timeView.setText(time);
     }
 }
