@@ -22,4 +22,8 @@
 
     <string name="title_activity_create_event">Nouvel événement</string>
     <string name="create_event">Enregistrer</string>
+    <string name="event_name">Nom de l\'événement</string>
+    <string name="event_location">Lieu de l\'événement</string>
+    <string name="private_event">Événement privé</string>
+    <string name="keywords">Mots-clés</string>
 </resources>
