@@ -3,11 +3,14 @@ package ubiquasif.uqac.betterwithstrangers;
 import android.app.DatePickerDialog;
 import android.app.FragmentManager;
 import android.app.TimePickerDialog;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -20,6 +23,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.places.Places;
 
 import ubiquasif.uqac.betterwithstrangers.Fragments.CreateEventFragment;
+import ubiquasif.uqac.betterwithstrangers.Fragments.PartyMapFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.TimelineFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.NotificationFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.ProfileFragment;
@@ -39,7 +43,7 @@ public class MainActivity extends AppCompatActivity
     private Fragment profilFragment;
     private Fragment notificationFragment;
     private Fragment timelineFragment;
-
+    private PartyMapFragment partyMapFragment;
     private  GoogleApiClient googleApiClient;
 
     /**
@@ -102,9 +106,12 @@ public class MainActivity extends AppCompatActivity
         profilFragment = ProfileFragment.newInstance();
         createEventFragment = CreateEventFragment.newInstance();
 
+        partyMapFragment = new PartyMapFragment();
         // Affichage de la création de soirée directement après le switch
         setTitle("Créer un événement");
         getSupportFragmentManager().beginTransaction().replace(R.id.main_container, createEventFragment).commit();
+
+        // getFragmentManager().beginTransaction().replace(R.id.main_container, m).commit();
 
         googleApiClient = new GoogleApiClient
                 .Builder(this)
@@ -125,5 +132,6 @@ public class MainActivity extends AppCompatActivity
     public void onFragmentInteraction(Uri uri) {
         Log.println(Log.DEBUG, "debug", "Fragment interaction detected");
     }
+
 
 }
