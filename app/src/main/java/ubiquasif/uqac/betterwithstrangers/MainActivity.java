@@ -9,18 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 
-
-import ubiquasif.uqac.betterwithstrangers.Fragments.CreateEventFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.PartyMapFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.TimelineFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.EventListFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.NotificationFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.ProfileFragment;
-import ubiquasif.uqac.betterwithstrangers.Fragments.TimelineFragment;
 import ubiquasif.uqac.betterwithstrangers.Helpers.Helper_NavigationBottomBar;
 
 public class MainActivity extends AppCompatActivity

@@ -125,6 +125,8 @@
                     android:hint="@string/event_location"
                     android:inputType="textShortMessage"
                     android:textSize="18sp" />
+
+
             </LinearLayout>
 
             <View
@@ -147,6 +149,7 @@
                     android:contentDescription="@string/keywords"
                     app:srcCompat="@drawable/ic_local_offer_black_24dp" />
 
+
                 <com.hootsuite.nachos.NachoTextView
                     android:id="@+id/event_tags"
                     android:layout_width="match_parent"
@@ -157,8 +160,15 @@
                     android:padding="0dp"
                     android:textSize="18sp"
                     app:chipBackground="@android:color/darker_gray" />
-            </LinearLayout>
 
+
+            </LinearLayout>
+            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/place_autocomplete_fragment"
+                android:name="ubiquasif.uqac.betterwithstrangers.Fragments.AutoCompleteFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
         </LinearLayout>
 
     </ScrollView>

@@ -1,7 +1,10 @@
 package ubiquasif.uqac.betterwithstrangers;
 
 import android.app.DatePickerDialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
@@ -9,6 +12,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +35,7 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import ubiquasif.uqac.betterwithstrangers.Fragments.AutoCompleteFragment;
 import ubiquasif.uqac.betterwithstrangers.Models.Event;
 
 public class CreateEventActivity
@@ -45,6 +51,7 @@ public class CreateEventActivity
     private EditText locationEdit;
     private Switch privateSwitch;
     private NachoTextView tagsView;
+    private AutoCompleteFragment autoCompleteFragment;
 
     private Calendar pickedDateTime;
     private FirebaseFirestore database;
@@ -77,10 +84,14 @@ public class CreateEventActivity
 
         nameEdit = findViewById(R.id.event_name);
         locationEdit = findViewById(R.id.event_location);
+
+        autoCompleteFragment = (AutoCompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+
         privateSwitch = findViewById(R.id.event_private);
 
         database = FirebaseFirestore.getInstance();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
