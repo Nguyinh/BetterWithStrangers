@@ -20,6 +20,8 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.util.Locale;
+
 import ubiquasif.uqac.betterwithstrangers.CreateEventActivity;
 import ubiquasif.uqac.betterwithstrangers.Helpers.EventHolder;
 import ubiquasif.uqac.betterwithstrangers.Models.Event;
@@ -94,10 +96,14 @@ public class EventListFragment extends Fragment implements EventHolder.OnItemVie
      * Méthode appelée lorsque l'utilisateur clique sur un élément de la liste (une soirée)
      *
      * @param itemView La vue en question
+     * @param model    L'événement (soirée) en question, pour accéder aux détails
      */
     @Override
-    public void onItemViewClicked(View itemView) {
-        Snackbar.make(itemView, "Ouvrir un dialogue pour les détails", Snackbar.LENGTH_SHORT).show();
+    public void onItemViewClicked(View itemView, Event model) {
+        if (model != null) {
+            String s = String.format(Locale.CANADA_FRENCH, "%.2f/5 (%d votes)", model.getConsensus(), model.getNumberOfRatings());
+            Snackbar.make(itemView, s, Snackbar.LENGTH_SHORT).show();
+        }
     }
 
 

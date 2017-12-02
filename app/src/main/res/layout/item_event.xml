@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:selectableItemBackground"
     android:clickable="true"
     android:focusable="true"
-    android:background="?android:selectableItemBackground"
-    android:orientation="vertical"
     android:padding="16dp">
 
     <TextView
@@ -13,16 +13,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        tools:text="Nom de l'événement" />
 
     <TextView
         android:id="@+id/item_event_date"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_event_name"
+        tools:text="13 décembre 2017 10:30" />
 
     <TextView
         android:id="@+id/item_event_location"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_below="@id/item_event_date"
+        tools:text="Lieu de l'événement" />
 
-</LinearLayout>
+    <RatingBar
+        android:id="@+id/item_event_consensus"
+        style="@style/Widget.AppCompat.RatingBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true" />
+
+</RelativeLayout>
