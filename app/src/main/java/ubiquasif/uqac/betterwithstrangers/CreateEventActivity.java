@@ -112,6 +112,7 @@ public class CreateEventActivity
     public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
         pickedDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
         pickedDateTime.set(Calendar.MINUTE, minute);
+        pickedDateTime.set(Calendar.SECOND, 0);
         updateTimeView();
     }
 
@@ -165,7 +166,10 @@ public class CreateEventActivity
 
     private void updateDateView() {
         DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG);
-        String date = getResources().getString(R.string.picked_date, dateFormat.format(pickedDateTime.getTime()));
+        String date = getResources().getString(
+                R.string.picked_date,
+                dateFormat.format(pickedDateTime.getTime())
+        );
         dateView.setText(date);
     }
 
