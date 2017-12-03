@@ -1,34 +1,35 @@
 package ubiquasif.uqac.betterwithstrangers.Fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
+
+import ubiquasif.uqac.betterwithstrangers.Helpers.NotificationHolder;
+import ubiquasif.uqac.betterwithstrangers.Models.Notification;
 import ubiquasif.uqac.betterwithstrangers.R;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link NotificationFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link NotificationFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * NotificationFragment
  */
-public class NotificationFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class NotificationFragment extends Fragment implements NotificationHolder.OnItemViewClickedListener{
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private RecyclerView recyclerView;
+    private NotificationAdapter adapter;
 
-    private OnFragmentInteractionListener mListener;
 
     public NotificationFragment() {
         // Required empty public constructor
@@ -37,28 +38,11 @@ public class NotificationFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment NotificationFragment.
      */
-    // TODO: Rename and change types and number of parameters
-    public static NotificationFragment newInstance(String param1, String param2) {
-        NotificationFragment fragment = new NotificationFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    @NonNull
+    public static NotificationFragment newInstance() {
+        return new NotificationFragment();
     }
 
     @Override
@@ -68,42 +52,82 @@ public class NotificationFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_notification, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        recyclerView = view.findViewById(R.id.notification_recycler);
+
+
+        Query query = FirebaseFirestore.getInstance()
+                .collection("notifications")
+                .orderBy("timestamp")
+                .limit(20);
+
+        FirestoreRecyclerOptions<Notification> options = new FirestoreRecyclerOptions.Builder<Notification>()
+                .setQuery(query, Notification.class)
+                .build();
+
+        adapter = new NotificationAdapter(options, this);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
+        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        adapter.startListening();
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
+    public void onStop() {
+        super.onStop();
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+        adapter.stopListening();
     }
 
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     * Méthode appelée lorsque l'utilisateur clique sur un élément de la liste
+     *
+     * @param itemView La vue en question
+     * @param model    notification en question, pour accéder aux détails
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    @Override
+    public void onItemViewClicked(View itemView, Notification model) {
+        if (model != null) {
+
+            Snackbar.make(itemView, "Notification lue", Snackbar.LENGTH_SHORT).show();
+        }
     }
+
+    /**
+     * Classe associant les Notifications de la base de données à une vue dans la liste
+     * Voir le layout item_notification et la classe Helpers.NotificationHolder
+     */
+    public class NotificationAdapter extends FirestoreRecyclerAdapter<Notification, NotificationHolder> {
+        NotificationHolder.OnItemViewClickedListener listener;
+
+        NotificationAdapter(FirestoreRecyclerOptions<Notification> options, NotificationHolder.OnItemViewClickedListener listener) {
+            super(options);
+            this.listener = listener;
+        }
+
+        @Override
+        public NotificationHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater
+                    .from(parent.getContext())
+                    .inflate(R.layout.item_notification, parent, false);
+
+            return new NotificationHolder(view, listener);
+        }
+
+        @Override
+        protected void onBindViewHolder(NotificationHolder holder, int position, Notification model) {
+            holder.bind(model);
+        }
+    }
+
 }
