@@ -6,8 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,15 +19,24 @@ import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.hootsuite.nachos.NachoTextView;
 import com.hootsuite.nachos.chip.Chip;
-import com.hootsuite.nachos.terminator.ChipTerminatorHandler;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 import ubiquasif.uqac.betterwithstrangers.FirstConnectionActivity;
+import ubiquasif.uqac.betterwithstrangers.Models.Event;
+import ubiquasif.uqac.betterwithstrangers.Models.User;
 import ubiquasif.uqac.betterwithstrangers.R;
 
 
@@ -37,6 +46,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private NachoTextView tags;
 
     private String[] suggestions = new String[]{"Tortilla Chips", "Melted Cheese", "Salsa", "Guacamole", "Mexico", "Jalapeno"};
+
+    private FirebaseFirestore database;
+
 
     public ProfileFragment() {
     }
@@ -68,12 +80,17 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         Button signOutButton = view.findViewById(R.id.sign_out_button);
         signOutButton.setOnClickListener(this);
 
+        Button testButton = view.findViewById(R.id.test_button);
+        testButton.setOnClickListener(this);
+
         Button modifyButton = view.findViewById(R.id.modify_button);
         modifyButton.setOnClickListener(this);
 
         TextView nameView = view.findViewById(R.id.display_name);
         ImageView photoView = view.findViewById(R.id.profile_photo);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        database = FirebaseFirestore.getInstance();
 
         if (user != null) {
             String name = user.getDisplayName();
@@ -105,6 +122,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                         }
                         if (!isLegit)                               // sinon il est effacé
                             tags.getChipTokenizer().deleteChip(chip, tags.getEditableText());
+                        else {
+                            Snackbar.make(getView(), "Ajout de " + chip.getText(), Snackbar.LENGTH_LONG).show();
+                            //database
+                        }
                     }
                 }
             }
@@ -145,8 +166,61 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                         }
                     });
         }
-    }
+        else if (view.getId() == R.id.test_button) {
+            User user = new User(
+                    FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                    "Florent Dupont"
+            );
 
+
+            Snackbar.make(getView(), "Ajout d'un utilisateur", Snackbar.LENGTH_SHORT).show();
+            Log.d("users", "sucess");
+
+            database.collection("users")
+                    .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .set(user)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Snackbar.make(getView(), "Création de User complète", Snackbar.LENGTH_LONG).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Snackbar.make(getView(), e.getMessage(), Snackbar.LENGTH_LONG).show();
+                        }
+                    });
+
+            database.collection("users")
+                    .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .collection("savedEvents")
+                    .add(new Event(FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                            "Soirée posée",
+                            true,
+                            new ArrayList<String>() {{
+                                add("tag1");
+                                add("tag2");
+                                add("tag42");
+                            }},
+                            Calendar.getInstance().getTime(),
+                            "a la casa",
+                            0,
+                            0))
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Snackbar.make(getView(), "Ajout soirée succès !", Snackbar.LENGTH_LONG).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Snackbar.make(getView(), "ECHEC !", Snackbar.LENGTH_LONG).show();
+                        }
+                    });
+        }
+    }
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name

@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity
         // TODO Check if factory methods / arguments are really necessary here
         eventListFragment = EventListFragment.newInstance();
         notificationFragment = NotificationFragment.newInstance(null, null);
-        timelineFragment = TimelineFragment.newInstance(null, null);
+        timelineFragment = TimelineFragment.newInstance();
         profileFragment = ProfileFragment.newInstance();
 
         partyMapFragment = new PartyMapFragment();
