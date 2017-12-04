@@ -1,10 +1,12 @@
 package ubiquasif.uqac.betterwithstrangers.Models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User {
     private String userId;
     private String name;
+    private String minibio;
     private List<String> preferences;
     private int guestRating;
     private int hostRating;
@@ -12,12 +14,13 @@ public class User {
     public User() {}
 
     public User(String userId, String name) {
-        this(userId, name, null, 0, 0);
+        this(userId, name, "", null, 0, 0);
     }
 
-    public User(String userId, String name, List<String> preferences, int guestRating, int hostRating) {
+    public User(String userId, String name, String minibio, List<String> preferences, int guestRating, int hostRating) {
         this.userId = userId;
         this.name = name;
+        this.minibio = minibio;
         this.preferences = preferences;
         this.guestRating = guestRating;
         this.hostRating = hostRating;
@@ -31,40 +34,20 @@ public class User {
         return name;
     }
 
-    public List<String> getPreferences() { return preferences; }
-
-    public int guestRating() { return guestRating; }
-
-    public int hostRating() { return hostRating; }
-
-
-    /*public User(String userId, String name, List<Event> events) {
-        this(userId, name, null, events, 0, 0);
-    }
-
-    public User(String userId, String name, List<String> preferences,
-                List<Event> events, int guestRating, int hostRating) {
-        this.userId = userId;
-        this.name = name;
-        this.preferences = preferences;
-        this.events = events;
-        this.guestRating = guestRating;
-        this.hostRating = hostRating;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public String getName() {
-        return name;
+    public String getMinibio() {
+        return minibio;
     }
 
     public List<String> getPreferences() { return preferences; }
 
-    public List<Event> getEvents() { return events; }
+    public int getGuestRating() { return guestRating; }
 
-    public int guestRating() { return guestRating; }
+    public int getHostRating() { return hostRating; }
 
-    public int hostRating() { return hostRating; }*/
+    public void addPreference(String newPreference) {
+        if(preferences == null) {
+            this.preferences = new ArrayList<String>();
+        }
+        this.preferences.add(newPreference);
+    }
 }
