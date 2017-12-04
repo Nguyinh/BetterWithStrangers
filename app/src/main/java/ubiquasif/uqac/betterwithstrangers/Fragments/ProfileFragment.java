@@ -2,6 +2,7 @@ package ubiquasif.uqac.betterwithstrangers.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Rating;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
@@ -25,6 +27,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hootsuite.nachos.NachoTextView;
 import com.hootsuite.nachos.chip.Chip;
@@ -44,6 +47,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private OnFragmentInteractionListener mListener;
 
     private NachoTextView tags;
+
+    private Chip currentChip;
 
     private String[] suggestions = new String[]{"Tortilla Chips", "Melted Cheese", "Salsa", "Guacamole", "Mexico", "Jalapeno"};
 
@@ -86,6 +91,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         Button modifyButton = view.findViewById(R.id.modify_button);
         modifyButton.setOnClickListener(this);
 
+        //RatingBar rb1 = view.findViewById(R.id.ratingBar);
+        //rb1.setRating(5);
+
+        //RatingBar rb2 = view.findViewById(R.id.ratingBar);
+        //rb2.setRating(5);
+
         TextView nameView = view.findViewById(R.id.display_name);
         ImageView photoView = view.findViewById(R.id.profile_photo);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -108,23 +119,56 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             public void onFocusChange(View view, boolean focus) {
                 if (!focus) {                                       // si perte de focus
                     tags.chipifyAllUnterminatedTokens();            // "chip" tous les tokens
-                    for(Chip chip : tags.getAllChips())             // parcourt tous les tokens pour vérifier s'ils sont bien dans les suggestions
+                    List<String> comparator = new ArrayList<String>();
+                    for(final Chip chip : tags.getAllChips())             // parcourt tous les tokens pour vérifier s'ils sont bien dans les suggestions
                     {
-                        boolean isLegit = false;
+                        boolean isLegit1 = false;
+                        boolean isLegit2 = true;
                         for(String sample : suggestions)
                         {
                             if(chip.getText() == sample)            // s'il correspond au moins une fois, alors il est validé
                             {
                                 Log.d("Nachos", sample + " " + chip.getText());
-                                isLegit = true;
+                                for(String comp : comparator)
+                                {
+                                    if(comp == chip.getText().toString())
+                                        isLegit2 = false;
+                                }
+                                isLegit1 = true;
                                 break;
                             }
                         }
-                        if (!isLegit)                               // sinon il est effacé
+                        if (!isLegit1 || !isLegit2)                               // sinon il est effacé
                             tags.getChipTokenizer().deleteChip(chip, tags.getEditableText());
-                        else {
-                            Snackbar.make(getView(), "Ajout de " + chip.getText(), Snackbar.LENGTH_LONG).show();
-                            //database
+                        else {                                      // validé et ajouté à Firebase
+                            comparator.add(chip.getText().toString());
+                            final DocumentReference docRef = database.collection("users")
+                                    .document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+                            Task<DocumentSnapshot> future = docRef.get();
+
+                            future.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    User userTemp = documentSnapshot.toObject(User.class);
+
+                                    userTemp.addPreference(chip.getText().toString());
+
+                                    docRef.update("preferences", userTemp.getPreferences())
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.d("OnFailure", e.getMessage());
+                                                }
+                                            })
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d("OnSuccess", "succes");
+                                                }
+                                            });
+                                }
+                            });
                         }
                     }
                 }
@@ -166,6 +210,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                         }
                     });
         }
+
+        //region test
         else if (view.getId() == R.id.test_button) {
             User user = new User(
                     FirebaseAuth.getInstance().getCurrentUser().getUid(),
@@ -173,7 +219,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
             );
 
 
-            Snackbar.make(getView(), "Ajout d'un utilisateur", Snackbar.LENGTH_SHORT).show();
+            //Snackbar.make(getView(), "Ajout d'un utilisateur", Snackbar.LENGTH_SHORT).show();
             Log.d("users", "sucess");
 
             database.collection("users")
@@ -192,34 +238,36 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                         }
                     });
 
-//            database.collection("users")
-//                    .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
-//                    .collection("savedEvents")
-//                    .add(new Event(FirebaseAuth.getInstance().getCurrentUser().getUid(),
-//                            "Soirée posée",
-//                            true,
-//                            new ArrayList<String>() {{
-//                                add("tag1");
-//                                add("tag2");
-//                                add("tag42");
-//                            }},
-//                            Calendar.getInstance().getTime(),
-//                            "a la casa",
-//                            0,
-//                            0))
-//                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                        @Override
-//                        public void onSuccess(DocumentReference documentReference) {
-//                            Snackbar.make(getView(), "Ajout soirée succès !", Snackbar.LENGTH_LONG).show();
-//                        }
-//                    })
-//                    .addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception e) {
-//                            Snackbar.make(getView(), "ECHEC !", Snackbar.LENGTH_LONG).show();
-//                        }
-//                    });
+            database.collection("users")
+                    .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .collection("savedEvents")
+                    .add(new Event(FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                            "Soirée posée",
+                            true,
+                            new ArrayList<String>() {{
+                                add("tag1");
+                                add("tag2");
+                                add("tag42");
+                            }},
+                            Calendar.getInstance().getTime(),
+                            "a la casa",
+                            0,
+                            0))
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Snackbar.make(getView(), "Ajout soirée succès !", Snackbar.LENGTH_LONG).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Snackbar.make(getView(), "ECHEC !", Snackbar.LENGTH_LONG).show();
+                        }
+                    });
+
         }
+        //endregion
     }
 
     public interface OnFragmentInteractionListener {
