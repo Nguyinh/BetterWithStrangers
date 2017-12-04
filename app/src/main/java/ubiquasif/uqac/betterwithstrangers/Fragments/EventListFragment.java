@@ -1,6 +1,7 @@
 package ubiquasif.uqac.betterwithstrangers.Fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,6 +13,9 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -30,8 +34,8 @@ import ubiquasif.uqac.betterwithstrangers.R;
 
 public class EventListFragment extends Fragment implements EventHolder.OnItemViewClickedListener {
 
+    private OnFragmentInteractionListener listener;
     private RecyclerView recyclerView;
-
     private EventAdapter adapter;
 
     public EventListFragment() {
@@ -52,14 +56,17 @@ public class EventListFragment extends Fragment implements EventHolder.OnItemVie
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setHasOptionsMenu(true);
+
         recyclerView = view.findViewById(R.id.event_recycler);
 
-        FloatingActionButton fab = view.findViewById(R.id.create_event_fab);
+        FloatingActionButton fab = view.findViewById(R.id.map_fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), CreateEventActivity.class);
-                startActivity(intent);
+                if (listener != null) {
+                    listener.onMapButtonClicked();
+                }
             }
         });
 
@@ -90,6 +97,42 @@ public class EventListFragment extends Fragment implements EventHolder.OnItemVie
         super.onStop();
 
         adapter.stopListening();
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            listener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.event_list, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_add_event:
+                Intent intent = new Intent(getActivity(), CreateEventActivity.class);
+                startActivity(intent);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     /**
@@ -132,5 +175,10 @@ public class EventListFragment extends Fragment implements EventHolder.OnItemVie
         protected void onBindViewHolder(EventHolder holder, int position, Event model) {
             holder.bind(model);
         }
+    }
+
+
+    public interface OnFragmentInteractionListener {
+        void onMapButtonClicked();
     }
 }

@@ -11,25 +11,23 @@ import android.view.MenuItem;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 
-
-import ubiquasif.uqac.betterwithstrangers.Fragments.PartyMapFragment;
-import ubiquasif.uqac.betterwithstrangers.Fragments.TimelineFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.EventListFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.NotificationFragment;
+import ubiquasif.uqac.betterwithstrangers.Fragments.PartyMapFragment;
 import ubiquasif.uqac.betterwithstrangers.Fragments.ProfileFragment;
+import ubiquasif.uqac.betterwithstrangers.Fragments.TimelineFragment;
 import ubiquasif.uqac.betterwithstrangers.Helpers.Helper_NavigationBottomBar;
 
 public class MainActivity extends AppCompatActivity
         implements ProfileFragment.OnFragmentInteractionListener,
-        //NotificationFragment.OnFragmentInteractionListener,
-        TimelineFragment.OnFragmentInteractionListener {
+        EventListFragment.OnFragmentInteractionListener {
 
     private Fragment eventListFragment;
     private Fragment profileFragment;
     private Fragment notificationFragment;
     private Fragment timelineFragment;
-    private PartyMapFragment partyMapFragment;
-    private  GoogleApiClient googleApiClient;
+    private Fragment partyMapFragment;
+    private GoogleApiClient googleApiClient;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -70,18 +68,15 @@ public class MainActivity extends AppCompatActivity
         // Fix navigation bar strange behavior
         Helper_NavigationBottomBar.disableShiftMode(navigation);
 
-        // TODO Check if factory methods / arguments are really necessary here
         eventListFragment = EventListFragment.newInstance();
         notificationFragment = NotificationFragment.newInstance();
         timelineFragment = TimelineFragment.newInstance();
         profileFragment = ProfileFragment.newInstance();
 
-        partyMapFragment = new PartyMapFragment();
-        // Affichage de la création de soirée directement après le switch
-            setTitle(R.string.title_party);
-            switchFragment(eventListFragment);
-        // getFragmentManager().beginTransaction().replace(R.id.main_container, m).commit();
+        partyMapFragment = PartyMapFragment.newInstance();
 
+        setTitle(R.string.title_party);
+        switchFragment(eventListFragment);
     }
 
     @Override
@@ -93,4 +88,8 @@ public class MainActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction().replace(R.id.main_container, fragment).commit();
     }
 
+    @Override
+    public void onMapButtonClicked() {
+        switchFragment(partyMapFragment);
+    }
 }
