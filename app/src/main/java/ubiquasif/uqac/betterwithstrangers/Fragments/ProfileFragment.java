@@ -192,33 +192,33 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                         }
                     });
 
-            database.collection("users")
-                    .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                    .collection("savedEvents")
-                    .add(new Event(FirebaseAuth.getInstance().getCurrentUser().getUid(),
-                            "Soirée posée",
-                            true,
-                            new ArrayList<String>() {{
-                                add("tag1");
-                                add("tag2");
-                                add("tag42");
-                            }},
-                            Calendar.getInstance().getTime(),
-                            "a la casa",
-                            0,
-                            0))
-                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            Snackbar.make(getView(), "Ajout soirée succès !", Snackbar.LENGTH_LONG).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Snackbar.make(getView(), "ECHEC !", Snackbar.LENGTH_LONG).show();
-                        }
-                    });
+//            database.collection("users")
+//                    .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                    .collection("savedEvents")
+//                    .add(new Event(FirebaseAuth.getInstance().getCurrentUser().getUid(),
+//                            "Soirée posée",
+//                            true,
+//                            new ArrayList<String>() {{
+//                                add("tag1");
+//                                add("tag2");
+//                                add("tag42");
+//                            }},
+//                            Calendar.getInstance().getTime(),
+//                            "a la casa",
+//                            0,
+//                            0))
+//                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                        @Override
+//                        public void onSuccess(DocumentReference documentReference) {
+//                            Snackbar.make(getView(), "Ajout soirée succès !", Snackbar.LENGTH_LONG).show();
+//                        }
+//                    })
+//                    .addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            Snackbar.make(getView(), "ECHEC !", Snackbar.LENGTH_LONG).show();
+//                        }
+//                    });
         }
     }
 

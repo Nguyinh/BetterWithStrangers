@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.hootsuite.nachos.NachoTextView;
 import com.hootsuite.nachos.terminator.ChipTerminatorHandler;
 
@@ -152,13 +153,17 @@ public class CreateEventActivity
     private void saveEvent() {
         tagsView.chipifyAllUnterminatedTokens();
 
+        String placeName = autoCompleteFragment.getPlaceName();
+        GeoPoint location = autoCompleteFragment.getPoint();
+
         Event event = new Event(
                 FirebaseAuth.getInstance().getUid(),
                 nameEdit.getText().toString(),
                 privateSwitch.isChecked(),
                 tagsView.getChipValues(),
                 pickedDateTime.getTime(),
-                locationEdit.getText().toString()
+                (placeName != null) ? placeName : "",
+                location
         );
 
         Snackbar.make(layout, R.string.event_pending, Snackbar.LENGTH_SHORT).show();
