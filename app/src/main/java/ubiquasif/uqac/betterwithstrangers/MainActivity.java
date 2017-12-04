@@ -21,7 +21,7 @@ import ubiquasif.uqac.betterwithstrangers.Helpers.Helper_NavigationBottomBar;
 
 public class MainActivity extends AppCompatActivity
         implements ProfileFragment.OnFragmentInteractionListener,
-        NotificationFragment.OnFragmentInteractionListener,
+        //NotificationFragment.OnFragmentInteractionListener,
         TimelineFragment.OnFragmentInteractionListener {
 
     private Fragment eventListFragment;
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity
 
         // TODO Check if factory methods / arguments are really necessary here
         eventListFragment = EventListFragment.newInstance();
-        notificationFragment = NotificationFragment.newInstance(null, null);
+        notificationFragment = NotificationFragment.newInstance();
         timelineFragment = TimelineFragment.newInstance();
         profileFragment = ProfileFragment.newInstance();
 
