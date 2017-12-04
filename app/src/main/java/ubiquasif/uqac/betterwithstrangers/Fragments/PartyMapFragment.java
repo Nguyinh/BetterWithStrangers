@@ -1,10 +1,12 @@
 package ubiquasif.uqac.betterwithstrangers.Fragments;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -56,6 +58,8 @@ public class PartyMapFragment extends Fragment implements OnMapReadyCallback
     private List<Place> partyPlaces;
     private ArrayList<Marker> partyMarkers = new ArrayList<Marker>();
 
+    private OnFragmentInteractionListener listener;
+
     @NonNull
     public static PartyMapFragment newInstance() {
         return new PartyMapFragment();
@@ -96,6 +100,33 @@ public class PartyMapFragment extends Fragment implements OnMapReadyCallback
         super.onViewCreated(view, savedInstanceState);
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        FloatingActionButton fab = view.findViewById(R.id.list_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null) {
+                    listener.onListButtonClicked();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            listener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
     }
 
 
@@ -118,6 +149,8 @@ public class PartyMapFragment extends Fragment implements OnMapReadyCallback
 
         // Do other setup activities here too, as described elsewhere in this tutorial.
 
+        getLocationPermission();
+
         // Turn on the My Location layer and the related control on the map.
         updateLocationUI();
 
@@ -126,8 +159,7 @@ public class PartyMapFragment extends Fragment implements OnMapReadyCallback
 
         for (Place place : partyPlaces)
         {
-            partyMarkers.add
-            (
+            partyMarkers.add(
                 map.addMarker
                     (
                     new MarkerOptions()
@@ -135,8 +167,6 @@ public class PartyMapFragment extends Fragment implements OnMapReadyCallback
                         .title(place.getName().toString())
                     )
             );
-
-
         }
     }
 
@@ -178,9 +208,7 @@ public class PartyMapFragment extends Fragment implements OnMapReadyCallback
             return;
         }
         try {
-            Log.d("LOL MAP", "test");
             if (locationPermissionGranted) {
-                Log.d("LOL MAP", "succès !");
                 map.setMyLocationEnabled(true);
                 map.getUiSettings().setMyLocationButtonEnabled(true);
             } else {
@@ -225,5 +253,10 @@ public class PartyMapFragment extends Fragment implements OnMapReadyCallback
         } catch(SecurityException e)  {
             Log.e("Exception: %s", e.getMessage());
         }
+    }
+
+
+    public interface OnFragmentInteractionListener {
+        void onListButtonClicked();
     }
 }

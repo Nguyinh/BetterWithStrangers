@@ -20,7 +20,8 @@ import ubiquasif.uqac.betterwithstrangers.Helpers.Helper_NavigationBottomBar;
 
 public class MainActivity extends AppCompatActivity
         implements ProfileFragment.OnFragmentInteractionListener,
-        EventListFragment.OnFragmentInteractionListener {
+        EventListFragment.OnFragmentInteractionListener,
+        PartyMapFragment.OnFragmentInteractionListener {
 
     private Fragment eventListFragment;
     private Fragment profileFragment;
@@ -91,5 +92,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onMapButtonClicked() {
         switchFragment(partyMapFragment);
+    }
+
+    @Override
+    public void onListButtonClicked() {
+        switchFragment(eventListFragment);
     }
 }
