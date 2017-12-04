@@ -22,7 +22,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
-        android:textStyle="bold"
         android:layout_below="@id/item_notification_content"
         tools:text="Date de la notification" />
 

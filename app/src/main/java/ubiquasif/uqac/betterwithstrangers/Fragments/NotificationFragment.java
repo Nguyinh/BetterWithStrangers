@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -59,9 +60,15 @@ public class NotificationFragment extends Fragment implements NotificationHolder
         recyclerView = view.findViewById(R.id.notification_recycler);
 
 
-        Query query = FirebaseFirestore.getInstance()
+        /*Query query = FirebaseFirestore.getInstance()
                 .collection("notifications")
                 .orderBy("timestamp")
+                .limit(20);*/
+
+        Query query = FirebaseFirestore.getInstance()
+                .collection("notifications")
+                .whereEqualTo("userId", FirebaseAuth.getInstance().getUid()) // Vérifier si notification.userId = id de l'utilisateur
+                .orderBy("timestamp", Query.Direction.DESCENDING) //date plus récente en haut
                 .limit(20);
 
         FirestoreRecyclerOptions<Notification> options = new FirestoreRecyclerOptions.Builder<Notification>()
