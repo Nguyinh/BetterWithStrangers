@@ -14,7 +14,7 @@ public class User {
     public User() {}
 
     public User(String userId, String name) {
-        this(userId, name, "", null, 0, 0);
+        this(userId, name, "", new ArrayList<String>(), 0, 0);
     }
 
     public User(String userId, String name, String minibio, List<String> preferences, int guestRating, int hostRating) {

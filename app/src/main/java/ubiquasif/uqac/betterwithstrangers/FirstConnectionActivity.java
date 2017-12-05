@@ -2,32 +2,28 @@ package ubiquasif.uqac.betterwithstrangers;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Arrays;
-import java.util.Calendar;
 
-import ubiquasif.uqac.betterwithstrangers.Models.Notification;
+import ubiquasif.uqac.betterwithstrangers.Models.User;
 
 public class FirstConnectionActivity extends AppCompatActivity {
 
     private static final int REQ_SIGN_IN = 1;
 
-    private FirebaseAuth mAuth;
+    private FirebaseAuth auth;
     private boolean beforeSignIn;
 
     private FirebaseFirestore database;
@@ -37,7 +33,7 @@ public class FirstConnectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_connection);
 
-        mAuth = FirebaseAuth.getInstance();
+        auth = FirebaseAuth.getInstance();
         beforeSignIn = true;
         database = FirebaseFirestore.getInstance();
     }
@@ -47,11 +43,10 @@ public class FirstConnectionActivity extends AppCompatActivity {
         super.onStart();
 
         if (beforeSignIn) {
-            if (mAuth.getCurrentUser() != null) {
+            if (auth.getCurrentUser() != null) {
                 proceed();
             } else {
                 signIn();
-                addWelcomeNotification();
             }
         }
     }
@@ -62,7 +57,7 @@ public class FirstConnectionActivity extends AppCompatActivity {
 
         if (requestCode == REQ_SIGN_IN) {
             if (resultCode == RESULT_OK) {
-                proceed();
+                createUserDocument();
             } else {
                 IdpResponse response = IdpResponse.fromResultIntent(data);
 
@@ -96,6 +91,29 @@ public class FirstConnectionActivity extends AppCompatActivity {
         signIn();
     }
 
+    private void createUserDocument() {
+        if (auth.getCurrentUser() != null) {
+            final DocumentReference docRef = database.collection("users").document(auth.getCurrentUser().getUid());
+            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (!documentSnapshot.exists()) {
+                        User user = new User(auth.getCurrentUser().getUid(), auth.getCurrentUser().getDisplayName());
+
+                        docRef.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                proceed();
+                            }
+                        });
+                    } else {
+                        proceed();
+                    }
+                }
+            });
+        }
+    }
+
     private void proceed() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -103,7 +121,7 @@ public class FirstConnectionActivity extends AppCompatActivity {
     }
 
 
-    private void addWelcomeNotification(){
+    /*private void addWelcomeNotification(){
 
         Notification notif = new Notification(
                 FirebaseAuth.getInstance().getUid(),
@@ -112,18 +130,6 @@ public class FirstConnectionActivity extends AppCompatActivity {
         );
 
         database.collection("notifications")
-                .add(notif)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        finish();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("myTag", "Error ajout notification Welcome");
-                    }
-                });
-    }
+                .add(notif);
+    }*/
 }
