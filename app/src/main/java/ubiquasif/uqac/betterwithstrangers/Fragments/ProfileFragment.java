@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.solver.widgets.Snapshot;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -31,9 +32,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.hootsuite.nachos.NachoTextView;
 import com.hootsuite.nachos.chip.Chip;
+import com.hootsuite.nachos.chip.ChipInfo;
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -50,14 +54,20 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     private Chip currentChip;
 
+    private List<String> userPreferences;
+
     private String[] suggestions = new String[]{"Salsa", "Chill", "Cinema", "Film", "Etudes", "Android", "Programmation", "Beerpong", "Karaoke", "Wine&Cheese", "Detente", "RavePAAAAARTY", "Lords of the ring",
                                                 "Truth or dare", "Concert", "Barathon", "PoolParty", "Mousse", "Strangers", "Meetic", "Speed dating", "Beer", "Netflix and chill", "Hockey", "LAN",
                                                 "Tuning", "Birthday", "Bob", "Halloween", "Christmas", "Pijama Party", "Nouvel an", "Déguisé", "Food", "Vegan", "Veillée", "No alcohol", "Harry Potter",
                                                 "Star Wars", "Star Trek", "Spooky", "Scatophile", "Urinophilie", "Batman", "Churros", "Rock", "Rap", "Tecktonik", "Pop", "Classique", "Electro", "Raggae",
                                                 "French kiss", "Baguette", "Poutine", "Nachos", "Tortilla", "SuitUp", "Geek", "Street", "Meeting", "Random"};
 
+
+    private List<String> suggestionsList;
+
     private FirebaseFirestore database;
 
+    private List<String> comparator;
 
     public ProfileFragment() {
     }
@@ -89,14 +99,8 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         Button signOutButton = view.findViewById(R.id.sign_out_button);
         signOutButton.setOnClickListener(this);
 
-        Button modifyButton = view.findViewById(R.id.modify_button);
-        modifyButton.setOnClickListener(this);
-
-        //RatingBar rb1 = view.findViewById(R.id.ratingBar);
-        //rb1.setRating(5);
-
-        //RatingBar rb2 = view.findViewById(R.id.ratingBar);
-        //rb2.setRating(5);
+        Button saveButton = view.findViewById(R.id.save_button);
+        saveButton.setOnClickListener(this);
 
         TextView nameView = view.findViewById(R.id.display_name);
         ImageView photoView = view.findViewById(R.id.profile_photo);
@@ -114,35 +118,87 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 Picasso.with(getContext()).load(photoUrl).into(photoView);
         }
 
+        userPreferences = new ArrayList<>();
+        suggestionsList= new ArrayList<>(Arrays.asList(suggestions));
+
         tags = view.findViewById(R.id.preferences);
+
+        database.collection("users")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                          @Override
+                                          public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                              if (documentSnapshot.get("preferences") != null)
+                                              {
+                                                  userPreferences = (List<String>) documentSnapshot.get("preferences");
+                                                  Log.d("pref", userPreferences.toString());
+                                                  tags.setText(userPreferences);
+                                              }
+
+                                          }
+                                      });
+
+        tags.setText(userPreferences);      // ajoute les préférences dans Nachos depuis Firebase
+
+
+        tags.setOnFocusChangeListener(new View.OnFocusChangeListener(){
+            @Override
+            public void onFocusChange(View view, boolean focus) {
+               if(!focus) {
+                   tags.chipifyAllUnterminatedTokens();
+                   Chip lastChip = tags.getAllChips().get(tags.getAllChips().size() - 1);
+                    Log.d("lastChip", lastChip.getText().toString());
+                   if (!suggestionsList.contains(lastChip.getText().toString()))
+                   {
+                       tags.getChipTokenizer().deleteChip(lastChip, tags.getEditableText());
+                   }
+                    userPreferences = tags.getChipValues();
+
+
+               }
+
+
+            }});
+
+
+
+        /*
         tags.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean focus) {
                 if (!focus) {                                       // si perte de focus
                     tags.chipifyAllUnterminatedTokens();            // "chip" tous les tokens
-                    List<String> comparator = new ArrayList<String>();
                     for(final Chip chip : tags.getAllChips())             // parcourt tous les tokens pour vérifier s'ils sont bien dans les suggestions
                     {
-                        boolean isLegit1 = false;
-                        boolean isLegit2 = true;
+                        Boolean isLegit1 = false;
+                        Boolean isLegit2 = true;
                         for(String sample : suggestions)
                         {
-                            if(chip.getText() == sample)            // s'il correspond au moins une fois, alors il est validé
+                            Log.d("Nachos", sample + " " + chip.getText());
+                            if(chip.getText().toString().equals(sample) )            // s'il correspond au moins une fois, alors il est validé
                             {
-                                Log.d("Nachos", sample + " " + chip.getText());
+
                                 for(String comp : comparator)
                                 {
-                                    if(comp == chip.getText().toString())
+                                    if(chip.getText().toString().equals(comp))
                                         isLegit2 = false;
+                                    else
+                                        comparator.add(chip.getText().toString());
+
                                 }
                                 isLegit1 = true;
                                 break;
                             }
                         }
+
+
+                        Log.d("isLegit1", isLegit1.toString());
+                        Log.d("isLegit2", isLegit2.toString());
                         if (!isLegit1 || !isLegit2)                               // sinon il est effacé
                             tags.getChipTokenizer().deleteChip(chip, tags.getEditableText());
                         else {                                      // validé et ajouté à Firebase
-                            comparator.add(chip.getText().toString());
+
                             final DocumentReference docRef = database.collection("users")
                                     .document(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
@@ -175,7 +231,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                 }
             }
         });
-
+*/
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line, suggestions);
         tags.setAdapter(adapter);
     }
@@ -210,6 +266,24 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                             getActivity().finish();
                         }
                     });
+        }
+
+        else if (view.getId() == R.id.save_button) {
+            Log.d("Hugo", "cliqué");
+
+            tags.chipifyAllUnterminatedTokens();
+            Chip lastChip = tags.getAllChips().get(tags.getAllChips().size() - 1);
+            Log.d("lastChip", lastChip.getText().toString());
+            if (!suggestionsList.contains(lastChip.getText().toString()))
+            {
+                tags.getChipTokenizer().deleteChip(lastChip, tags.getEditableText());
+            }
+            userPreferences = tags.getChipValues();
+
+            database.collection("users")
+                    .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .update("preferences", userPreferences);
+
         }
 /*
         //region test
