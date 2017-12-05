@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,19 +23,19 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.util.Locale;
-
 import ubiquasif.uqac.betterwithstrangers.CreateEventActivity;
 import ubiquasif.uqac.betterwithstrangers.Helpers.EventHolder;
 import ubiquasif.uqac.betterwithstrangers.Models.Event;
 import ubiquasif.uqac.betterwithstrangers.R;
 
 
-public class EventListFragment extends Fragment implements EventHolder.OnItemViewClickedListener {
+public class EventListFragment extends Fragment
+        implements EventHolder.OnItemViewClickedListener {
 
     private OnFragmentInteractionListener listener;
     private RecyclerView recyclerView;
     private EventAdapter adapter;
+    private RatingFragment ratingFragment;
 
     private boolean isToggled = false;
 
@@ -85,6 +84,8 @@ public class EventListFragment extends Fragment implements EventHolder.OnItemVie
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+
+        ratingFragment = new RatingFragment();
     }
 
     @Override
@@ -146,20 +147,19 @@ public class EventListFragment extends Fragment implements EventHolder.OnItemVie
     @Override
     public void onItemViewClicked(View itemView, Event model) {
         if (model != null) {
-            String s = String.format(Locale.CANADA_FRENCH, "%.2f/5 (%d votes)", model.getConsensus(), model.getNumberOfRatings());
+//            String s = String.format(Locale.CANADA_FRENCH, "%.2f/5 (%d votes)", model.getConsensus(), model.getNumberOfRatings());
+//            Snackbar.make(itemView, s, Snackbar.LENGTH_SHORT).show();
+
             if (!isToggled) {
+                ratingFragment.show(getFragmentManager(), RatingFragment.TAG);
                 itemView.setBackgroundColor(0xffc4ffbf);
                 isToggled = true;
-            }
-            else
-            {
+            } else {
                 itemView.setBackgroundColor(0x00000000);
                 isToggled = false;
             }
-            Snackbar.make(itemView, s, Snackbar.LENGTH_SHORT).show();
         }
     }
-
 
     /**
      * Classe associant les Events (soirées) de la base de données à une vue dans la liste
