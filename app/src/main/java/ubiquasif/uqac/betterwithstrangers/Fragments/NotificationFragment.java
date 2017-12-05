@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,12 +59,6 @@ public class NotificationFragment extends Fragment implements NotificationHolder
         super.onViewCreated(view, savedInstanceState);
 
         recyclerView = view.findViewById(R.id.notification_recycler);
-
-
-        /*Query query = FirebaseFirestore.getInstance()
-                .collection("notifications")
-                .orderBy("timestamp")
-                .limit(20);*/
 
         Query query = FirebaseFirestore.getInstance()
                 .collection("notifications")
