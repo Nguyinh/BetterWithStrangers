@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -25,19 +26,25 @@ import android.widget.TimePicker;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.hootsuite.nachos.NachoTextView;
+import com.hootsuite.nachos.chip.Chip;
 import com.hootsuite.nachos.terminator.ChipTerminatorHandler;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import ubiquasif.uqac.betterwithstrangers.Fragments.AutoCompleteFragment;
 import ubiquasif.uqac.betterwithstrangers.Models.Event;
+import ubiquasif.uqac.betterwithstrangers.Models.User;
 
 public class CreateEventActivity
         extends AppCompatActivity
@@ -56,6 +63,12 @@ public class CreateEventActivity
 
     private Calendar pickedDateTime;
     private FirebaseFirestore database;
+
+    private String[] suggestions = new String[]{"Salsa", "Chill", "Cinema", "Film", "Etudes", "Android", "Programmation", "Beerpong", "Karaoke", "Wine&Cheese", "Detente", "RavePAAAAARTY", "Lords of the ring",
+            "Truth or dare", "Concert", "Barathon", "PoolParty", "Mousse", "Strangers", "Meetic", "Speed dating", "Beer", "Netflix and chill", "Hockey", "LAN",
+            "Tuning", "Birthday", "Bob", "Halloween", "Christmas", "Pijama Party", "Nouvel an", "Déguisé", "Food", "Vegan", "Veillée", "No alcohol", "Harry Potter",
+            "Star Wars", "Star Trek", "Spooky", "Scatophile", "Urinophilie", "Batman", "Churros", "Rock", "Rap", "Tecktonik", "Pop", "Classique", "Electro", "Raggae",
+            "French kiss", "Baguette", "Poutine", "Nachos", "Tortilla", "SuitUp", "Geek", "Street", "Meeting", "Random"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +94,69 @@ public class CreateEventActivity
         updateTimeView();
 
         tagsView = findViewById(R.id.event_tags);
-        tagsView.addChipTerminator(' ', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_TO_TERMINATOR);
+        tagsView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean focus) {
+                if (!focus) {                                       // si perte de focus
+                    tagsView.chipifyAllUnterminatedTokens();            // "chip" tous les tokens
+                    List<String> comparator = new ArrayList<String>();
+                    for(final Chip chip : tagsView.getAllChips())             // parcourt tous les tokens pour vérifier s'ils sont bien dans les suggestions
+                    {
+                        boolean isLegit1 = false;
+                        boolean isLegit2 = true;
+                        for(String sample : suggestions)
+                        {
+                            if(chip.getText() == sample)            // s'il correspond au moins une fois, alors il est validé
+                            {
+                                Log.d("Nachos", sample + " " + chip.getText());
+                                for(String comp : comparator)
+                                {
+                                    if(comp == chip.getText().toString())
+                                        isLegit2 = false;
+                                }
+                                isLegit1 = true;
+                                break;
+                            }
+                        }
+                        if (!isLegit1 || !isLegit2)                               // sinon il est effacé
+                            tagsView.getChipTokenizer().deleteChip(chip, tagsView.getEditableText());
+                        else {                                      // validé et ajouté à Firebase
+                            comparator.add(chip.getText().toString());
+                            final DocumentReference docRef = database.collection("users")
+                                    .document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+                            Task<DocumentSnapshot> future = docRef.get();
+
+                            future.addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    User userTemp = documentSnapshot.toObject(User.class);
+
+                                    userTemp.addPreference(chip.getText().toString());
+
+                                    docRef.update("preferences", userTemp.getPreferences())
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.d("OnFailure", e.getMessage());
+                                                }
+                                            })
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d("OnSuccess", "succes");
+                                                }
+                                            });
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        });
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_dropdown_item_1line, suggestions);
+        tagsView.setAdapter(adapter);
 
         nameEdit = findViewById(R.id.event_name);
         locationEdit = findViewById(R.id.event_location);

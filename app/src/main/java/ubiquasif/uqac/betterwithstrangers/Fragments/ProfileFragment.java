@@ -50,7 +50,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
     private Chip currentChip;
 
-    private String[] suggestions = new String[]{"Tortilla Chips", "Melted Cheese", "Salsa", "Guacamole", "Mexico", "Jalapeno"};
+    private String[] suggestions = new String[]{"Salsa", "Chill", "Cinema", "Film", "Etudes", "Android", "Programmation", "Beerpong", "Karaoke", "Wine&Cheese", "Detente", "RavePAAAAARTY", "Lords of the ring",
+                                                "Truth or dare", "Concert", "Barathon", "PoolParty", "Mousse", "Strangers", "Meetic", "Speed dating", "Beer", "Netflix and chill", "Hockey", "LAN",
+                                                "Tuning", "Birthday", "Bob", "Halloween", "Christmas", "Pijama Party", "Nouvel an", "Déguisé", "Food", "Vegan", "Veillée", "No alcohol", "Harry Potter",
+                                                "Star Wars", "Star Trek", "Spooky", "Scatophile", "Urinophilie", "Batman", "Churros", "Rock", "Rap", "Tecktonik", "Pop", "Classique", "Electro", "Raggae",
+                                                "French kiss", "Baguette", "Poutine", "Nachos", "Tortilla", "SuitUp", "Geek", "Street", "Meeting", "Random"};
 
     private FirebaseFirestore database;
 
@@ -84,9 +88,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         Button signOutButton = view.findViewById(R.id.sign_out_button);
         signOutButton.setOnClickListener(this);
-
-        Button testButton = view.findViewById(R.id.test_button);
-        testButton.setOnClickListener(this);
 
         Button modifyButton = view.findViewById(R.id.modify_button);
         modifyButton.setOnClickListener(this);
@@ -210,7 +211,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                         }
                     });
         }
-
+/*
         //region test
         else if (view.getId() == R.id.test_button) {
             User user = new User(
@@ -237,7 +238,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                             Snackbar.make(getView(), e.getMessage(), Snackbar.LENGTH_LONG).show();
                         }
                     });
-/*
+
             database.collection("users")
                     .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
                     .collection("savedEvents")
@@ -265,9 +266,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                             Snackbar.make(getView(), "ECHEC !", Snackbar.LENGTH_LONG).show();
                         }
                     });
-*/
+
         }
         //endregion
+        */
     }
 
     public interface OnFragmentInteractionListener {
