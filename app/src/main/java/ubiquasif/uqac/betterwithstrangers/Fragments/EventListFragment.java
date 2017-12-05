@@ -38,6 +38,8 @@ public class EventListFragment extends Fragment implements EventHolder.OnItemVie
     private RecyclerView recyclerView;
     private EventAdapter adapter;
 
+    private boolean isToggled = false;
+
     public EventListFragment() {
     }
 
@@ -145,6 +147,15 @@ public class EventListFragment extends Fragment implements EventHolder.OnItemVie
     public void onItemViewClicked(View itemView, Event model) {
         if (model != null) {
             String s = String.format(Locale.CANADA_FRENCH, "%.2f/5 (%d votes)", model.getConsensus(), model.getNumberOfRatings());
+            if (!isToggled) {
+                itemView.setBackgroundColor(0xffc4ffbf);
+                isToggled = true;
+            }
+            else
+            {
+                itemView.setBackgroundColor(0x00000000);
+                isToggled = false;
+            }
             Snackbar.make(itemView, s, Snackbar.LENGTH_SHORT).show();
         }
     }
