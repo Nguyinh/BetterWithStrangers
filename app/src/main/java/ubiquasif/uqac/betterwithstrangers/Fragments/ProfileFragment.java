@@ -35,6 +35,8 @@ import com.hootsuite.nachos.chip.Chip;
 import com.hootsuite.nachos.chip.ChipInfo;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,6 +70,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
     private FirebaseFirestore database;
 
     private List<String> comparator;
+
+    TextView tv;
+
+    RatingBar guestRB;
+    RatingBar hostRB;
 
     public ProfileFragment() {
     }
@@ -106,6 +113,11 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
         ImageView photoView = view.findViewById(R.id.profile_photo);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+        guestRB = view.findViewById(R.id.guest_ratingBar);
+        hostRB = view.findViewById(R.id.host_ratingBar);
+
+        guestRB.setRating(3);
+
         database = FirebaseFirestore.getInstance();
 
         if (user != null) {
@@ -132,7 +144,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                                               if (documentSnapshot.get("preferences") != null)
                                               {
                                                   userPreferences = (List<String>) documentSnapshot.get("preferences");
-                                                  Log.d("pref", userPreferences.toString());
                                                   tags.setText(userPreferences);
                                               }
 
@@ -141,14 +152,12 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
         tags.setText(userPreferences);      // ajoute les préférences dans Nachos depuis Firebase
 
-
         tags.setOnFocusChangeListener(new View.OnFocusChangeListener(){
             @Override
             public void onFocusChange(View view, boolean focus) {
                if(!focus) {
                    tags.chipifyAllUnterminatedTokens();
                    Chip lastChip = tags.getAllChips().get(tags.getAllChips().size() - 1);
-                    Log.d("lastChip", lastChip.getText().toString());
                    if (!suggestionsList.contains(lastChip.getText().toString()))
                    {
                        tags.getChipTokenizer().deleteChip(lastChip, tags.getEditableText());
@@ -161,7 +170,51 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
 
             }});
 
+        tv = view.findViewById(R.id.minibio_TextView);
 
+        database.collection("users")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.get("minibio") != null)
+                        {
+                            tv.setText(documentSnapshot.get("minibio").toString());
+                        }
+
+                    }
+                });
+
+        database.collection("users")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.get("guestRating") != null)
+                        {
+                            long guestRating = (long) documentSnapshot.get("guestRating");
+                            guestRB.setRating((float) guestRating);
+                        }
+
+                    }
+                });
+
+        database.collection("users")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.get("hostRating") != null)
+                        {
+                            long hostRating = (long) documentSnapshot.get("hostRating");
+                            hostRB.setRating((float) hostRating);
+                        }
+
+                    }
+                });
 
         /*
         tags.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -284,6 +337,9 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                     .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
                     .update("preferences", userPreferences);
 
+            database.collection("users")
+                    .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .update("minibio", tv.getText().toString());
         }
 /*
         //region test

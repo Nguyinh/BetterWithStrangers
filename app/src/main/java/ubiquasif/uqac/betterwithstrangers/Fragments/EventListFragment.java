@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,8 +22,15 @@ import android.view.ViewGroup;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.List;
 
 import ubiquasif.uqac.betterwithstrangers.CreateEventActivity;
 import ubiquasif.uqac.betterwithstrangers.Helpers.EventHolder;
@@ -38,6 +47,8 @@ public class EventListFragment extends Fragment
     private RatingFragment ratingFragment;
 
     private boolean isToggled = false;
+
+    private FirebaseFirestore database;
 
     public EventListFragment() {
     }
@@ -86,6 +97,8 @@ public class EventListFragment extends Fragment
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
 
         ratingFragment = new RatingFragment();
+
+        database = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -154,6 +167,23 @@ public class EventListFragment extends Fragment
                 ratingFragment.show(getFragmentManager(), RatingFragment.TAG);
                 itemView.setBackgroundColor(0xffc4ffbf);
                 isToggled = true;
+
+                database.collection("users")
+                        .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .collection("savedEvents")
+                        .add(model)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Snackbar.make(getView(), "Vous participez à la soirée :)", Snackbar.LENGTH_LONG).show();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Snackbar.make(getView(), "Il y a eu une erreur, veuillez réessayer plus tard :(", Snackbar.LENGTH_LONG).show();
+                            }
+                        });
             } else {
                 itemView.setBackgroundColor(0x00000000);
                 isToggled = false;
