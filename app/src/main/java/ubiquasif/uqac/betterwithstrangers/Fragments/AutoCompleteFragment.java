@@ -41,7 +41,7 @@ public class AutoCompleteFragment extends PlaceAutocompleteFragment {
         });
 
         typeFilter = new AutocompleteFilter.Builder()
-                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ESTABLISHMENT)
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ESTABLISHMENT|AutocompleteFilter.TYPE_FILTER_ADDRESS)
                 .build();
 
         this.setFilter(typeFilter);

@@ -3,6 +3,7 @@ package ubiquasif.uqac.betterwithstrangers.Fragments;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,19 +22,32 @@ import com.google.android.gms.location.places.GeoDataClient;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.location.places.internal.PlaceEntity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import ubiquasif.uqac.betterwithstrangers.R;
 
@@ -55,7 +69,9 @@ public class PartyMapFragment extends Fragment implements OnMapReadyCallback
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
 
-    private List<Place> partyPlaces;
+
+    private Map<String, GeoPoint> partyPlaces = new HashMap<String, GeoPoint>();
+
     private ArrayList<Marker> partyMarkers = new ArrayList<Marker>();
 
     private OnFragmentInteractionListener listener;
@@ -83,7 +99,26 @@ public class PartyMapFragment extends Fragment implements OnMapReadyCallback
         // Construct a FusedLocationProviderClient
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
-        partyPlaces = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("events")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                        if (e != null)
+                        {
+                            Log.d("Listen failed", e.toString());
+                            return;
+                        }
+
+                        for (DocumentSnapshot doc : documentSnapshots)
+                        {
+                            if (doc.get("location") != null && doc.get("placeName") != null)
+                            {
+                                partyPlaces.put(doc.getString("placeName"), doc.getGeoPoint("location"));
+                            }
+                        }
+                    }
+                });
     }
 
     @Override
@@ -157,14 +192,14 @@ public class PartyMapFragment extends Fragment implements OnMapReadyCallback
         // Get the current location of the device and set the position of the map.
         getDeviceLocation();
 
-        for (Place place : partyPlaces)
+        for (Map.Entry<String, GeoPoint> entry : partyPlaces.entrySet())
         {
             partyMarkers.add(
                 map.addMarker
                     (
                     new MarkerOptions()
-                        .position(place.getLatLng())
-                        .title(place.getName().toString())
+                        .position(new LatLng(entry.getValue().getLatitude(), entry.getValue().getLongitude()))
+                        .title(entry.getKey())
                     )
             );
         }

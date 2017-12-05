@@ -237,7 +237,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                             Snackbar.make(getView(), e.getMessage(), Snackbar.LENGTH_LONG).show();
                         }
                     });
-
+/*
             database.collection("users")
                     .document(FirebaseAuth.getInstance().getCurrentUser().getUid())
                     .collection("savedEvents")
@@ -265,7 +265,7 @@ public class ProfileFragment extends Fragment implements View.OnClickListener {
                             Snackbar.make(getView(), "ECHEC !", Snackbar.LENGTH_LONG).show();
                         }
                     });
-
+*/
         }
         //endregion
     }
